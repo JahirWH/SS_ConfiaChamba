@@ -43,10 +43,29 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'job_list' %}">Trabajos</a>
                     </li>
-                    <li class="nav-item">
-                        <!-- <a class="nav-link" href="{% url 'job_create' %}">Publicar Trabajo</a> -->
-                        <a class="nav-link" href=" {% url 'login' %}">Publicar Trabajo</a>
-                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'job_create' %}">Publicar Trabajo</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'profile_view' %}">Mi Perfil</a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Editar Perfil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar Sesión</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Registrarse</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -70,7 +89,7 @@
     <!-- Footer -->
     <footer class="bg-light py-4 mt-5">
         <div class="container text-center">
-            <p class="mb-0">&copy; 2024 Confía Chamba. Todos los derechos reservados.</p>
+            <p class="mb-0">&copy; 2025 Confía Chamba. Todos los derechos reservados.</p>
         </div>
     </footer>
 

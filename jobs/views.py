@@ -55,6 +55,7 @@ def job_list(request):
     jobs = Job.objects.filter(is_active=True).order_by('-created_at')
     return render(request, 'jobs/job_list.html', {'jobs': jobs})
 
+
 @login_required
 def job_create(request):
     if request.method == 'POST':
@@ -69,6 +70,14 @@ def job_create(request):
     else:
         form = JobForm()
     return render(request, 'jobs/job_form.html', {'form': form})
+
+def info_job(request, job_id):
+    try:
+        job = Job.objects.get(id=job_id, is_active=True)
+        return render(request, 'jobs/job_detail.html', {'job': job})
+    except Job.DoesNotExist:
+        messages.error(request, 'El trabajo no existe o no está disponible.')
+        return redirect('job_list')
 
 def login_count(request):
     return render(request, 'jobs/login.html')
