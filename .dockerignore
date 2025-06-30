@@ -1,0 +1,21 @@
+# .dockerignore
+# Exclude Python cache and virtual environments
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# SQLite database
+db.sqlite3
+
+# Media
+media/
+

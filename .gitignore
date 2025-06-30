@@ -1,0 +1,40 @@
+/.venv
+/.dockeringnore
+/Dockerfile
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+db.sqlite3
+*.sqlite3
+
+# Media and static files
+/media/
+staticfiles/
+static/
+
+# VSCode settings
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Test and coverage
+.coverage
+htmlcov/
+*.log
+
+# Env files
+.env
+.env.*
+
+# Node modules (if any frontend)
+node_modules/
+
+# Other
+*.bak
+*.swp
+*.swo
+# End Generation Here

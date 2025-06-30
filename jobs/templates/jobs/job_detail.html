@@ -81,7 +81,7 @@
     </div>
 
     <div class="col-lg-4">
-        <div class="card shadow">
+        <div class="card shadow mb-4">
             <div class="card-body">
                 <h5 class="card-title">Información del Publicador</h5>
                 <div class="d-flex align-items-center mb-3">
@@ -93,7 +93,19 @@
                         <small class="text-muted">Miembro desde {{ job.created_by.date_joined|date:"M Y" }}</small>
                     </div>
                 </div>
-                
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item"><strong>Municipio:</strong> {{ job.created_by.profile.city|default:'No disponible' }}</li>
+                    <li class="list-group-item"><strong>Estado:</strong> {{ job.created_by.profile.state|default:'No disponible' }}</li>
+                    <li class="list-group-item"><strong>País:</strong> México</li>
+                    <li class="list-group-item"><strong>Teléfono:</strong> {{ job.created_by.profile.phone_number|default:'No disponible' }}</li>
+                    <li class="list-group-item"><strong>Dirección:</strong> {{ job.created_by.profile.address|default:'No disponible' }}</li>
+                </ul>
+                {% if job.created_by.profile.bio %}
+                <div class="mb-3">
+                    <h6>Sobre mí</h6>
+                    <p class="mb-0">{{ job.created_by.profile.bio }}</p>
+                </div>
+                {% endif %}
                 {% if job.created_by.profile.rating > 0 %}
                 <div class="mb-3">
                     <h6>Calificación</h6>
@@ -111,12 +123,89 @@
                     </div>
                 </div>
                 {% endif %}
-
                 {% if job.created_by.profile.jobs_completed > 0 %}
                 <div class="mb-3">
                     <h6>Trabajos Completados</h6>
                     <p class="mb-0">{{ job.created_by.profile.jobs_completed }}</p>
                 </div>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Sección de Reseñas -->
+        <div class="card shadow mt-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3"><i class="fas fa-star text-warning"></i> Reseñas del Publicador</h5>
+                {% if job.created_by.review_set.all %}
+                    {% for review in job.created_by.review_set.all|slice:":5" %}
+                        <div class="mb-4 border-bottom pb-3">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong>{{ review.user.get_full_name|default:review.user.username }}</strong>
+                                <span class="ms-2 text-warning">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </span>
+                                <small class="ms-2 text-muted">{{ review.created_at|date:"d M Y" }}</small>
+                            </div>
+                            <div class="row mb-2 mt-2">
+                                <div class="col-6">
+                                    <span class="fw-bold">Amabilidad:</span>
+                                    <span class="text-warning">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <span class="fw-bold">Buen trato:</span>
+                                    <span class="text-warning">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <span class="fw-bold">Paga justa:</span>
+                                    <span class="text-warning">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <span class="fw-bold">Cumple con su parte:</span>
+                                    <span class="text-warning">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="mb-1 mt-2">{{ review.comment }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">Este publicador aún no tiene reseñas.</p>
                 {% endif %}
             </div>
         </div>
