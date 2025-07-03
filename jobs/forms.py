@@ -23,10 +23,13 @@ class UserProfileForm(forms.ModelForm):
 class JobForm(forms.ModelForm):
     class Meta:
         model = Job
-        fields = ('title', 'description', 'category', 'location', 'price', 
-                 'contact_phone', 'contact_email', 'requirements', 
-                 'experience_required', 'schedule')
+        fields = [
+            'title', 'description', 'category', 'location', 'payment_type', 'price',
+            'contact_phone', 'contact_email', 'requirements', 'experience_required', 'schedule'
+        ]
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
             'requirements': forms.Textarea(attrs={'rows': 3}),
+            'schedule': forms.TextInput(attrs={'placeholder': 'Ej: Lunes a viernes, 9am-5pm'}),
         } 
+        

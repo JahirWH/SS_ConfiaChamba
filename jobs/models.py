@@ -39,14 +39,44 @@ class Job(models.Model):
         ('JARDINERIA', 'Jardinería'),
         ('REPARACIONES', 'Reparaciones'),
         ('TRANSPORTE', 'Transporte'),
+        ('PLOMERIA', 'Plomería'),
+        ('ELECTRICIDAD', 'Electricidad'),
+        ('CARPINTERIA', 'Carpintería'),
+        ('ALBANILERIA', 'Albañilería'),
+        ('PINTURA', 'Pintura'),
+        ('CUIDADO_PERSONAS', 'Cuidado de personas'),
+        ('CUIDADO_ANIMALES', 'Cuidado de animales'),
+        ('COCINA', 'Cocina'),
+        ('TAPICERIA', 'Tapicería'),
+        ('HERRERIA', 'Herrería'),
+        ('LAVANDERIA', 'Lavandería'),
+        ('MUDANZA', 'Mudanza'),
+        ('JARDINERIA', 'Jardinería'),
+        ('MECANICA', 'Mecánica'),
+        ('MANUALIDADES', 'Manualidades'),
+        ('VENTAS', 'Ventas ambulantes'),
         ('OTROS', 'Otros'),
     ]
 
     title = models.CharField(max_length=200, verbose_name='Título del trabajo')
-    description = models.TextField(verbose_name='Descripción')
+    description = models.TextField(verbose_name='Descripción del trabajo a hacer')
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, verbose_name='Categoría')
     location = models.CharField(max_length=200, verbose_name='Ubicación')
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio')
+    PAYMENT_TYPE_CHOICES = [
+        ('COMPLETO', 'Pago por trabajo completo'),
+        ('HORA', 'Pago por hora'),
+    ]
+    payment_type = models.CharField(
+        max_length=10,
+        choices=PAYMENT_TYPE_CHOICES,
+        default='COMPLETO',
+        verbose_name='Tipo de pago'
+    )
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Monto de pago'
+    )
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Creado por')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Última actualización')

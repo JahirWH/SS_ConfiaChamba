@@ -63,7 +63,6 @@ def job_create(request):
         if form.is_valid():
             job = form.save(commit=False)
             job.created_by = request.user
-            job.contact_email = request.user.email
             job.save()
             messages.success(request, '¡Trabajo publicado exitosamente!')
             return redirect('job_list')
