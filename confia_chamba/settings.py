@@ -10,22 +10,35 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+# Load .env for local development / simple env file support
+try:
+    # python-dotenv: load environment variables from a file named .env in BASE_DIR
+    from dotenv import load_dotenv
+except Exception:
+    load_dotenv = None
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# If python-dotenv is available, load the .env file at project root
+if load_dotenv is not None:
+    load_dotenv(str(BASE_DIR / '.env'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qo5*9_puw+xmzv$3a!5s^uj(-wl-e@f#qyl2v)_nd*h*9+v2ve'
+# SECURITY: read secret key and debug from environment for production
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dev-secret')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG should be False in production. Set DEBUG=1 in the environment to enable.
+DEBUG = os.environ.get('DEBUG', '0') in ('1', 'True', 'true')
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS can be provided as a comma-separated env var, e.g. "example.com,www.example.com"
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 
 # Application definition
@@ -42,6 +55,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,6 +95,17 @@ DATABASES = {
     }
 }
 
+# If a DATABASE_URL environment variable is provided (e.g. postgres://user:pass@host:port/db)
+# use dj_database_url to parse it and override DATABASES['default']
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    try:
+        import dj_database_url
+        DATABASES['default'] = dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+    except Exception:
+        # If dj_database_url is not installed or parsing fails, keep sqlite and log later
+        pass
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -117,6 +142,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Use WhiteNoise to serve static files in production (suitable for simple deployments)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -141,3 +170,22 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+# ============================================
+# PRODUCTION / HEROKU SECURITY CONFIGURATION
+# ============================================
+# Use HTTPS in production (Heroku always uses HTTPS)
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # HSTS: tell browsers to always use HTTPS for 1 year
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    # Allow X-Forwarded-Proto header from Heroku
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# CSRF_TRUSTED_ORIGINS: allow your Heroku domain
+# Format: https://your-app-name.herokuapp.com
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if os.environ.get('CSRF_TRUSTED_ORIGINS') else []

@@ -1,3 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Environments
+.env
+venv/
+env/
+
+# Database
+db.sqlite3
+
+# Static and media
+media/
+staticfiles/
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

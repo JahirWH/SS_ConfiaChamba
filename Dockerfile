@@ -14,7 +14,7 @@ RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
 # Copy project
-COPY . /code/
+COPY . /code/ 
 
 # Create directory for media files
 RUN mkdir -p /code/media
@@ -23,5 +23,5 @@ RUN mkdir -p /code/media
 EXPOSE 8000
 
 # Default command
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn confia_chamba.wsgi:application --bind 0.0.0.0:8000 --workers 3"]
 
