@@ -77,41 +77,6 @@ Buen trabajo → Buena reseña → Más ofertas → Mejores clientes
 
 ---
 
-## ¿Qué Ofrece ConfiaChamba?
-
-### Para Trabajadores 👷
-
-- 📈 Más trabajos cuando tu calificación sube
-- 💰 Ingresos directos (sin intermediarios)
-- 🛡️ Contratos claros y pagos seguros
-- 🎨 Portafolio para mostrar tu trabajo
-- 📞 Chat integrado para comunicación
-
-### Para Clientes 🤝
-
-- ✅ Trabajadores verificados y confiables
-- 💯 Precios transparentes y fijos
-- 🌟 Reseñas detalladas de clientes reales
-- 🛡️ Garantía y protección
-- 💬 Comunicación directa
-
----
-
-## Características Principales
-
-| Característica          | Beneficio                                     |
-| ----------------------- | --------------------------------------------- |
-| **Precios Fijos**       | Sabes exactamente cuánto pagas/ganas          |
-| **Verificación**        | Documento de identidad confirmado             |
-| **Portafolio**          | Muestra tus trabajos anteriores               |
-| **Reseñas Múltiples**   | Calidad, puntualidad, profesionalismo, precio |
-| **Pagos Escalonados**   | Anticipo + Saldo final = Seguridad            |
-| **Contratos Claros**    | Todo por escrito                              |
-| **Chat Integrado**      | Comunícate directamente                       |
-| **Sistema de Disputas** | Si hay problema, se resuelve justo            |
-
----
-
 ## Cómo Empezar
 
 ### Para Trabajadores (5 minutos):
@@ -138,25 +103,6 @@ Electricidad • Plomería • Carpintería • Pintura • Limpieza • Jardine
 
 ---
 
-## ¿Por Qué ConfiaChamba?
-
-✨ **Confianza** - Todos verificados  
-✨ **Transparencia** - Sin sorpresas  
-✨ **Equidad** - Precios justos  
-✨ **Profesionalismo** - Estándares de calidad  
-✨ **Comunidad** - Todos ganan juntos
-
----
-
-## Documentación Completa
-
-- `ESQUEMA-MEJORADO.md` - Cómo está construido
-- `COMPARATIVA.md` - Antes vs después
-- `EJEMPLOS-PRACTICOS.md` - Casos reales
-- `FIX-REGISTRO.md` - Solución de problemas
-
----
-
 ## Un Proyecto de Servicio Social
 
 ConfiaChamba nace de una pregunta simple:
@@ -164,18 +110,6 @@ ConfiaChamba nace de una pregunta simple:
 > **¿Por qué los trabajadores informales no tienen un lugar confiable donde crecer?**
 
 Esta plataforma es la respuesta. Desarrollada como proyecto de servicio social para demostrar que la tecnología puede generar oportunidades reales.
-
----
-
-## Seguridad y Confianza
-
-✅ Documento de identidad verificado  
-✅ Contratos por cada trabajo  
-✅ Pagos seguros escalonados  
-✅ Historial completo de transacciones  
-✅ Sistema de mediación para conflictos
-
----
 
 ## 💡 La Visión
 
