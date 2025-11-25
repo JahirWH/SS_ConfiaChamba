@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - TrabajoLocal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+  <!-- Navbar -->
+  <nav class="bg-blue-600 text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold">🔧 TrabajoLocal</a>
+      <div id="navLinks" class="flex gap-4 items-center">
+        <a href="index.html" class="hover:underline">Inicio</a>
+        <button onclick="logout()" class="bg-red-500 px-4 py-2 rounded hover:bg-red-600">Salir</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile Section -->
+  <section class="container mx-auto px-4 py-12">
+    <div class="max-w-2xl mx-auto">
+      <!-- Profile Card -->
+      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <div class="flex items-center gap-6 mb-6">
+          <div id="userAvatar" class="bg-blue-500 text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold">
+            <!-- Se llena dinámicamente -->
+          </div>
+          <div id="userInfo">
+            <!-- Se llena dinámicamente -->
+          </div>
+        </div>
+
+        <div class="border-t pt-6">
+          <h3 class="text-2xl font-bold mb-4">Información del Perfil</h3>
+          <div id="profileDetails" class="grid grid-cols-2 gap-4">
+            <!-- Se llena dinámicamente -->
+          </div>
+        </div>
+      </div>
+
+      <!-- User Jobs -->
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold">Mis Trabajos</h3>
+          <a href="create-job.html" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            + Nuevo Trabajo
+          </a>
+        </div>
+        <div id="userJobs" class="space-y-4">
+          <!-- Se llena dinámicamente -->
+        </div>
+        <div id="noJobs" class="text-center text-gray-500 py-8 hidden">
+          <p>Aún no has publicado trabajos</p>
+          <a href="create-job.html" class="text-blue-600 font-bold hover:underline">Publica tu primer trabajo aquí</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+
+    async function loadProfile() {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      if (!token || !user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Llenar avatar
+      const avatar = document.getElementById('userAvatar');
+      avatar.textContent = user.nombre.charAt(0).toUpperCase();
+
+      // Llenar info del usuario
+      const userInfo = document.getElementById('userInfo');
+      userInfo.innerHTML = `
+        <div>
+          <h2 class="text-2xl font-bold">${user.nombre}</h2>
+          <p class="text-gray-600">${user.email}</p>
+          <p class="text-sm text-gray-500 mt-2">⭐ ${user.promedio_calificacion || '0.00'} • ${user.total_trabajos || 0} trabajos</p>
+        </div>
+      `;
+
+      // Llenar detalles del perfil
+      const profileDetails = document.getElementById('profileDetails');
+      profileDetails.innerHTML = `
+        <div>
+          <p class="text-gray-600 font-semibold">Email</p>
+          <p class="text-gray-800">${user.email}</p>
+        </div>
+        <div>
+          <p class="text-gray-600 font-semibold">Ciudad</p>
+          <p class="text-gray-800">${user.ciudad || 'No especificada'}</p>
+        </div>
+        <div>
+          <p class="text-gray-600 font-semibold">Tipo de Usuario</p>
+          <p class="text-gray-800">${user.tipo_usuario === 'trabajador' ? 'Trabajador' : 'Cliente'}</p>
+        </div>
+        <div>
+          <p class="text-gray-600 font-semibold">Trabajos Realizados</p>
+          <p class="text-gray-800">${user.total_trabajos || 0}</p>
+        </div>
+      `;
+
+      // Cargar trabajos del usuario
+      loadUserJobs();
+    }
+
+    async function loadUserJobs() {
+      const token = localStorage.getItem('token');
+      const userJobs = document.getElementById('userJobs');
+      const noJobs = document.getElementById('noJobs');
+
+      try {
+        const response = await fetch(`${API_URL}/jobs`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const jobs = await response.json();
+
+        if (jobs.length === 0) {
+          userJobs.innerHTML = '';
+          noJobs.classList.remove('hidden');
+          return;
+        }
+
+        noJobs.classList.add('hidden');
+        userJobs.innerHTML = jobs.map(job => `
+          <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="font-bold text-gray-800">${job.titulo}</h4>
+                <p class="text-sm text-gray-600 mt-1">${job.descripcion.substring(0, 100)}...</p>
+                <div class="flex gap-2 mt-2">
+                  <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">${job.categoria}</span>
+                  <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">$${job.precio}</span>
+                </div>
+              </div>
+              <button onclick="editJob(${job.id})" class="text-blue-600 hover:underline text-sm">Editar</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error al cargar trabajos:', error);
+        userJobs.innerHTML = '<p class="text-red-500">Error al cargar los trabajos</p>';
+      }
+    }
+
+    function editJob(jobId) {
+      alert('Función de edición próximamente disponible');
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    // Cargar perfil al iniciar
+    loadProfile();
+  </script>
+</body>
+</html>

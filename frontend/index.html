@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrabajoLocal - Encuentra trabajadores cerca de ti</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .job-card:hover { transform: translateY(-4px); transition: all 0.3s; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Navbar -->
+  <nav class="bg-blue-600 text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">🔧 TrabajoLocal</h1>
+      <div id="navLinks">
+        <!-- Se llena dinámicamente con JS -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold mb-4">Encuentra trabajadores locales cerca de ti</h2>
+      <p class="text-xl mb-8">Plomeros, electricistas, carpinteros y más</p>
+      <div class="flex gap-4 justify-center">
+        <input type="text" id="searchCity" placeholder="¿En qué ciudad?" 
+               class="px-6 py-3 rounded-lg text-gray-800 w-64">
+        <select id="searchCategory" class="px-6 py-3 rounded-lg text-gray-800">
+          <option value="">Todas las categorías</option>
+          <option value="plomeria">Plomería</option>
+          <option value="electricidad">Electricidad</option>
+          <option value="carpinteria">Carpintería</option>
+          <option value="pintura">Pintura</option>
+          <option value="limpieza">Limpieza</option>
+          <option value="jardineria">Jardinería</option>
+          <option value="otros">Otros</option>
+        </select>
+        <button onclick="searchJobs()" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100">
+          Buscar
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trabajos Disponibles -->
+  <section class="container mx-auto px-4 py-12">
+    <h3 class="text-3xl font-bold mb-8">Trabajos Disponibles</h3>
+    <div id="jobsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Se llena dinámicamente -->
+    </div>
+    <div id="loadingJobs" class="text-center py-12 hidden">
+      <p class="text-gray-500">Cargando trabajos...</p>
+    </div>
+    <div id="noJobs" class="text-center py-12 hidden">
+      <p class="text-gray-500">No se encontraron trabajos</p>
+    </div>
+  </section>
+
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+
+    // Verificar si está logueado
+    function isLoggedIn() {
+      return !!localStorage.getItem('token');
+    }
+
+    // Actualizar navegación
+    function updateNav() {
+      const navLinks = document.getElementById('navLinks');
+      if (isLoggedIn()) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        navLinks.innerHTML = `
+          <div class="flex gap-4 items-center">
+            <a href="create-job.html" class="hover:underline">Publicar Trabajo</a>
+            <a href="profile.html" class="hover:underline">Mi Perfil</a>
+            <span class="bg-blue-500 px-3 py-1 rounded">${user.nombre}</span>
+            <button onclick="logout()" class="bg-red-500 px-4 py-2 rounded hover:bg-red-600">Salir</button>
+          </div>
+        `;
+      } else {
+        navLinks.innerHTML = `
+          <div class="flex gap-4">
+            <a href="login.html" class="hover:underline">Iniciar Sesión</a>
+            <a href="register.html" class="bg-white text-blue-600 px-4 py-2 rounded font-bold hover:bg-gray-100">Registrarse</a>
+          </div>
+        `;
+      }
+    }
+
+    // Logout
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.reload();
+    }
+
+    // Cargar trabajos
+    async function loadJobs(ciudad = '', categoria = '') {
+      const jobsList = document.getElementById('jobsList');
+      const loadingJobs = document.getElementById('loadingJobs');
+      const noJobs = document.getElementById('noJobs');
+
+      jobsList.innerHTML = '';
+      loadingJobs.classList.remove('hidden');
+      noJobs.classList.add('hidden');
+
+      try {
+        let url = `${API_URL}/jobs?`;
+        if (ciudad) url += `ciudad=${encodeURIComponent(ciudad)}&`;
+        if (categoria) url += `categoria=${encodeURIComponent(categoria)}`;
+
+        const response = await fetch(url);
+        const jobs = await response.json();
+
+        loadingJobs.classList.add('hidden');
+
+        if (jobs.length === 0) {
+          noJobs.classList.remove('hidden');
+          return;
+        }
+
+        jobs.forEach(job => {
+          const jobCard = document.createElement('div');
+          jobCard.className = 'job-card bg-white rounded-lg shadow-md p-6 cursor-pointer';
+          jobCard.onclick = () => window.location.href = `job-detail.html?id=${job.id}`;
+          
+          jobCard.innerHTML = `
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="text-xl font-bold text-gray-800">${job.titulo}</h4>
+              <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">${job.categoria}</span>
+            </div>
+            <p class="text-gray-600 mb-4 line-clamp-2">${job.descripcion}</p>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-2xl font-bold text-green-600">$${job.precio}</span>
+              <span class="text-gray-500 text-sm">/ ${job.tipo_precio === 'por_hora' ? 'hora' : 'trabajo'}</span>
+            </div>
+            <div class="text-gray-500 text-sm mb-3">
+              📍 ${job.ciudad || 'No especificado'}
+            </div>
+            <div class="border-t pt-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold">
+                  ${job.user.nombre.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-800">${job.user.nombre}</p>
+                  <p class="text-sm text-gray-500">⭐ ${job.user.promedio_calificacion || '0.00'} (${job.user.total_trabajos || 0} trabajos)</p>
+                </div>
+              </div>
+            </div>
+          `;
+          jobsList.appendChild(jobCard);
+        });
+      } catch (error) {
+        console.error('Error al cargar trabajos:', error);
+        loadingJobs.classList.add('hidden');
+        jobsList.innerHTML = '<p class="text-red-500 text-center col-span-full">Error al cargar trabajos</p>';
+      }
+    }
+
+    // Buscar trabajos
+    function searchJobs() {
+      const ciudad = document.getElementById('searchCity').value;
+      const categoria = document.getElementById('searchCategory').value;
+      loadJobs(ciudad, categoria);
+    }
+
+    // Inicializar
+    updateNav();
+    loadJobs();
+  </script>
+</body>
+</html>

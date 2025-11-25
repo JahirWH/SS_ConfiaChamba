@@ -10,6 +10,9 @@ env/
 
 # Database
 db.sqlite3
+database-setup.sql
+database-setup-v2.sql
+
 
 # Static and media
 media/
@@ -86,3 +89,17 @@ node_modules/
 # System
 Thumbs.db
 ehthumbs.db
+/backend/middleware/auth.js
+
+
+# Supabase
+.supabase/
+check-supabase.js
+
+#readme files
+GUIA_RAPIDA.md
+COMPARATIVA.md
+CORRECCIONES.md
+EJEMPLOS-PRACTICOS.md
+ESQUEMA-MEJORADO.md
+FIX-REGISTRO.md

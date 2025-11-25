@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publicar Trabajo - TrabajoLocal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+  <!-- Navbar -->
+  <nav class="bg-blue-600 text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold">🔧 TrabajoLocal</a>
+      <div class="flex gap-4 items-center">
+        <a href="index.html" class="hover:underline">Inicio</a>
+        <a href="profile.html" class="hover:underline">Mi Perfil</a>
+        <button onclick="logout()" class="bg-red-500 px-4 py-2 rounded hover:bg-red-600">Salir</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Formulario -->
+  <section class="container mx-auto px-4 py-12">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+      <h2 class="text-3xl font-bold mb-6 text-center">Publicar Nuevo Trabajo</h2>
+      
+      <form id="jobForm" onsubmit="createJob(event)">
+        <div class="mb-4">
+          <label class="block text-gray-700 font-bold mb-2">Título del Trabajo</label>
+          <input type="text" id="titulo" required placeholder="Ej: Reparación de tubería"
+                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 font-bold mb-2">Descripción Detallada</label>
+          <textarea id="descripcion" required rows="5" placeholder="Describe el trabajo que ofreces..."
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Categoría</label>
+            <select id="categoria" required
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Selecciona una categoría</option>
+              <option value="plomeria">Plomería</option>
+              <option value="electricidad">Electricidad</option>
+              <option value="carpinteria">Carpintería</option>
+              <option value="pintura">Pintura</option>
+              <option value="limpieza">Limpieza</option>
+              <option value="jardineria">Jardinería</option>
+              <option value="construccion">Construcción</option>
+              <option value="mudanzas">Mudanzas</option>
+              <option value="otros">Otros</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Precio</label>
+            <input type="number" id="precio" required min="0" step="0.01" placeholder="0.00"
+                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 font-bold mb-2">Tipo de Precio</label>
+          <div class="flex gap-4">
+            <label class="flex items-center">
+              <input type="radio" name="tipo_precio" value="por_hora" required class="mr-2">
+              Por Hora
+            </label>
+            <label class="flex items-center">
+              <input type="radio" name="tipo_precio" value="por_trabajo" required class="mr-2">
+              Por Trabajo Completo
+            </label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Ubicación</label>
+            <input type="text" id="ubicacion" placeholder="Dirección o zona"
+                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Ciudad</label>
+            <input type="text" id="ciudad" required placeholder="Tu ciudad"
+                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+
+        <div id="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg hidden"></div>
+        <div id="successMessage" class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg hidden"></div>
+
+        <button type="submit" id="submitBtn"
+                class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">
+          Publicar Trabajo
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+
+    function getToken() {
+      return localStorage.getItem('token');
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    // Verificar autenticación
+    if (!getToken()) {
+      window.location.href = 'login.html';
+    }
+
+    // Pre-llenar ciudad del usuario
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.ciudad) {
+      document.getElementById('ciudad').value = user.ciudad;
+    }
+
+    async function createJob(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const errorMessage = document.getElementById('errorMessage');
+      const successMessage = document.getElementById('successMessage');
+
+      errorMessage.classList.add('hidden');
+      successMessage.classList.add('hidden');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Publicando...';
+
+      const data = {
+        titulo: document.getElementById('titulo').value,
+        descripcion: document.getElementById('descripcion').value,
+        categoria: document.getElementById('categoria').value,
+        precio: parseFloat(document.getElementById('precio').value),
+        tipo_precio: document.querySelector('input[name="tipo_precio"]:checked').value,
+        ubicacion: document.getElementById('ubicacion').value,
+        ciudad: document.getElementById('ciudad').value
+      };
+
+      try {
+        const response = await fetch(`${API_URL}/jobs`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getToken()}`
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || 'Error al publicar trabajo');
+        }
+
+        successMessage.textContent = '¡Trabajo publicado exitosamente! Redirigiendo...';
+        successMessage.classList.remove('hidden');
+
+        setTimeout(() => {
+          window.location.href = 'profile.html';
+        }, 1500);
+
+      } catch (error) {
+        errorMessage.textContent = error.message;
+        errorMessage.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Publicar Trabajo';
+      }
+    }
+  </script>
+</body>
+</html>
