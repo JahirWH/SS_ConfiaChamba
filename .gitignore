@@ -17,7 +17,9 @@ database-setup-v2.sql
 # Static and media
 media/
 staticfiles/
-
+backend
+/backend/routes
+routes/
 # VSCode
 .vscode/
 
@@ -53,6 +55,7 @@ venv/
 ENV/
 env/
 *.env
+update-urls.sh
 
 # VSCode and IDEs
 .vscode/
@@ -103,3 +106,8 @@ CORRECCIONES.md
 EJEMPLOS-PRACTICOS.md
 ESQUEMA-MEJORADO.md
 FIX-REGISTRO.md
+COMPARATIVA.md
+CONFIGURACION-DESPLIEGUE.md
+DESPLIEGUE.md
+
+check-deployment.sh
