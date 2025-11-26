@@ -16,11 +16,16 @@ const supabase = createClient(
 // Configuración de CORS para desarrollo y producción
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-    ? [process.env.FRONTEND_URL || 'https://confiacham.vercel.app']
-    : ['http://localhost:3000', 'http://localhost:5173'],
+    ? [
+        'https://ss-confia-chamba.vercel.app',
+        'https://ss-confiachamba.onrender.com',
+        process.env.FRONTEND_URL || 'https://ss-confia-chamba.vercel.app'
+      ]
+    : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000'],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
 };
 
 // Middleware

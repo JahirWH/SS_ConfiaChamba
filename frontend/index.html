@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TrabajoLocal - Encuentra trabajadores cerca de ti</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="config.js"></script>
   <script src="config.js" ></script>
   <style>
     .job-card:hover { transform: translateY(-4px); transition: all 0.3s; }
@@ -61,7 +62,7 @@
   </section>
 
   <script>
-    const API_URL = 'http://localhost:3000/api';
+    <-r API_URL now loaded from config.js -->
 
     // Verificar si está logueado
     function isLoggedIn() {
@@ -109,7 +110,7 @@
       noJobs.classList.add('hidden');
 
       try {
-        let url = `${API_URL}/jobs?`;
+        let url = `${CONFIG.API_ENDPOINT}/jobs?`;
         if (ciudad) url += `ciudad=${encodeURIComponent(ciudad)}&`;
         if (categoria) url += `categoria=${encodeURIComponent(categoria)}`;
 

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalle del Trabajo - TrabajoLocal</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="config.js"></script>
 </head>
 <body class="bg-gray-50">
   <!-- Navbar -->
@@ -44,7 +45,7 @@
   </section>
 
   <script>
-    const API_URL = 'http://localhost:3000/api'; 
+    <-r API_URL now loaded from config.js --> 
 
     // Obtener ID del trabajo de la URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -91,7 +92,7 @@
       }
 
       try {
-        const response = await fetch(`${API_URL}/jobs/${jobId}`);
+        const response = await fetch(`${CONFIG.API_ENDPOINT}/jobs/${jobId}`);
         const job = await response.json();
 
         if (!response.ok) {

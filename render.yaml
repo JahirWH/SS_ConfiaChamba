@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: ss-confiachamba
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    working_dir: backend
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: SUPABASE_URL
+        value: ${{ secrets.SUPABASE_URL }}
+      - key: SUPABASE_KEY
+        value: ${{ secrets.SUPABASE_KEY }}
+      - key: JWT_SECRET
+        value: ${{ secrets.JWT_SECRET }}
+      - key: FRONTEND_URL
+        value: https://ss-confia-chamba.vercel.app
