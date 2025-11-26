@@ -17,9 +17,9 @@ database-setup-v2.sql
 # Static and media
 media/
 staticfiles/
-backend
-/backend/routes
-routes/
+# backend
+# /backend/routes
+# routes/
 # VSCode
 .vscode/
 
@@ -92,7 +92,6 @@ node_modules/
 # System
 Thumbs.db
 ehthumbs.db
-/backend/middleware/auth.js
 
 
 # Supabase
