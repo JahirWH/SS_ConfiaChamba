@@ -92,7 +92,7 @@ node_modules/
 # System
 Thumbs.db
 ehthumbs.db
-
+frontend/vercel.json
 
 # Supabase
 .supabase/
