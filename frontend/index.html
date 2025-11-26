@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrabajoLocal - Encuentra trabajadores cerca de ti</title>
+  <title>ConfiaChamba - Encuentra trabajadores cerca de ti</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="config.js"></script>
-  <script src="config.js" ></script>
   <style>
     .job-card:hover { transform: translateY(-4px); transition: all 0.3s; }
   </style>
@@ -15,7 +14,7 @@
   <!-- Navbar -->
   <nav class="bg-blue-600 text-white shadow-lg">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold">🔧 TrabajoLocal</h1>
+      <h1 class="text-2xl font-bold">🔧 ConfiaChamba</h1>
       <div id="navLinks">
         <!-- Se llena dinámicamente con JS -->
       </div>
@@ -171,8 +170,19 @@
     }
 
     // Inicializar
-    updateNav();
-    loadJobs();
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNav();
+      loadJobs();
+    });
+    
+    // También ejecutar inmediatamente en caso de que el DOM ya esté listo
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateNav);
+      document.addEventListener('DOMContentLoaded', loadJobs);
+    } else {
+      updateNav();
+      loadJobs();
+    }
   </script>
 </body>
 </html>
