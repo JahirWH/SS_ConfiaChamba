@@ -98,15 +98,7 @@ frontend/vercel.json
 .supabase/
 check-supabase.js
 
-#readme files
-GUIA_RAPIDA.md
-COMPARATIVA.md
-CORRECCIONES.md
-EJEMPLOS-PRACTICOS.md
-ESQUEMA-MEJORADO.md
-FIX-REGISTRO.md
-COMPARATIVA.md
-CONFIGURACION-DESPLIEGUE.md
-DESPLIEGUE.md
+#info detalles
+info
 
 check-deployment.sh
