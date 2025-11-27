@@ -13,6 +13,8 @@ db.sqlite3
 database-setup.sql
 database-setup-v2.sql
 
+#rendered 
+
 
 # Static and media
 media/
@@ -100,5 +102,5 @@ check-supabase.js
 
 #info detalles
 info
-
+mejoras-futuras.md
 check-deployment.sh

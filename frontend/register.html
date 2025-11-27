@@ -6,143 +6,188 @@
   <title>Registrarse - ConfiaChamba</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="config.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
+  </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-white">
+  
   <!-- Navbar -->
-  <nav class="bg-blue-600 text-white shadow-lg">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="index.html" class="text-2xl font-bold">🔧 ConfiaChamba</a>
-      <div class="flex gap-4">
-        <a href="index.html" class="hover:underline">Inicio</a>
-        <a href="login.html" class="bg-white text-blue-600 px-4 py-2 rounded font-bold hover:bg-gray-100">Iniciar Sesión</a>
+  <nav class="border-b bg-white">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-2">
+        <span class="text-2xl">💼</span>
+        <span class="text-xl font-bold text-gray-900">ConfiaChamba</span>
+      </a>
+      <div class="flex gap-3 items-center">
+        <a href="index.html" class="text-gray-700 hover:text-gray-900">Inicio</a>
+        <a href="login.html" class="text-gray-700 hover:text-orange-600">¿Ya tienes cuenta?</a>
       </div>
     </div>
   </nav>
 
-  <!-- Register Form -->
-  <section class="container mx-auto px-4 py-12">
-    <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8">
-      <h2 class="text-3xl font-bold mb-6 text-center">Crear Cuenta</h2>
+  <!-- Formulario -->
+  <section class="max-w-md mx-auto px-4 py-12">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Únete a ConfiaChamba</h1>
+      <p class="text-gray-600">Crea tu cuenta en 2 minutos</p>
+    </div>
+
+    <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm"></div>
+
+    <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4">
       
-      <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"></div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tu nombre completo</label>
+        <input type="text" id="nombre" required
+               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+               placeholder="Ej: Juan Pérez">
+      </div>
 
-      <form id="registerForm" onsubmit="handleRegister(event)">
-        <div class="mb-4">
-          <label class="block text-gray-700 font-bold mb-2">Nombre Completo</label>
-          <input type="text" id="nombre" required
-                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                 placeholder="Tu nombre">
-        </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <input type="email" id="email" required
+               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+               placeholder="tu@email.com">
+      </div>
 
-        <div class="mb-4">
-          <label class="block text-gray-700 font-bold mb-2">Email</label>
-          <input type="email" id="email" required
-                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                 placeholder="tu@email.com">
-        </div>
-
-        <div class="mb-4">
-          <label class="block text-gray-700 font-bold mb-2">Ciudad</label>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
           <input type="text" id="ciudad"
-                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
                  placeholder="Tu ciudad">
         </div>
-
-        <div class="mb-4">
-          <label class="block text-gray-700 font-bold mb-2">Teléfono</label>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
           <input type="tel" id="telefono"
-                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                 placeholder="Tu teléfono">
+                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+                 placeholder="Opcional">
         </div>
-
-        <div class="mb-4">
-          <label class="block text-gray-700 font-bold mb-2">Tipo de Usuario</label>
-          <select id="tipo_usuario" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option value="trabajador">Trabajador (ofrece servicios)</option>
-            <option value="cliente">Cliente (busca trabajos)</option>
-          </select>
-        </div>
-
-        <div class="mb-6">
-          <label class="block text-gray-700 font-bold mb-2">Contraseña</label>
-          <input type="password" id="password" required
-                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                 placeholder="Mínimo 6 caracteres">
-        </div>
-
-        <div class="mb-6">
-          <label class="block text-gray-700 font-bold mb-2">Confirmar Contraseña</label>
-          <input type="password" id="confirmPassword" required
-                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                 placeholder="Confirma tu contraseña">
-        </div>
-
-        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition">
-          Crear Cuenta
-        </button>
-      </form>
-
-      <div class="mt-4 text-center text-gray-600">
-        <p>¿Ya tienes cuenta? <a href="login.html" class="text-blue-600 font-bold hover:underline">Inicia sesión aquí</a></p>
       </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">¿Qué buscas?</label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="relative cursor-pointer">
+            <input type="radio" name="tipo_usuario" value="trabajador" class="peer hidden" checked>
+            <div class="border-2 border-gray-300 peer-checked:border-orange-500 peer-checked:bg-orange-50 rounded-lg p-4 text-center transition">
+              <div class="text-3xl mb-2">🔧</div>
+              <div class="font-semibold text-gray-900">Ofrecer trabajos</div>
+              <div class="text-xs text-gray-600 mt-1">Soy trabajador</div>
+            </div>
+          </label>
+          <label class="relative cursor-pointer">
+            <input type="radio" name="tipo_usuario" value="cliente" class="peer hidden">
+            <div class="border-2 border-gray-300 peer-checked:border-orange-500 peer-checked:bg-orange-50 rounded-lg p-4 text-center transition">
+              <div class="text-3xl mb-2">👤</div>
+              <div class="font-semibold text-gray-900">Buscar trabajos</div>
+              <div class="text-xs text-gray-600 mt-1">Soy cliente</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+        <input type="password" id="password" required
+               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+               placeholder="Mínimo 6 caracteres">
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Confirmar contraseña</label>
+        <input type="password" id="confirmPassword" required
+               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+               placeholder="Repite tu contraseña">
+      </div>
+
+      <button type="submit" id="submitBtn" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition mt-6">
+        Crear mi cuenta
+      </button>
+    </form>
+
+    <div class="mt-6 text-center text-sm text-gray-600">
+      ¿Ya tienes cuenta? <a href="login.html" class="text-orange-600 font-medium hover:underline">Inicia sesión</a>
     </div>
+
+    <p class="mt-4 text-xs text-center text-gray-500">
+      Al registrarte aceptas que tus datos sean usados para conectarte con otros usuarios
+    </p>
   </section>
 
   <script>
     async function handleRegister(event) {
       event.preventDefault();
 
-      const nombre = document.getElementById('nombre').value;
-      const email = document.getElementById('email').value;
-      const ciudad = document.getElementById('ciudad').value;
-      const telefono = document.getElementById('telefono').value;
-      const tipo_usuario = document.getElementById('tipo_usuario').value;
+      const submitBtn = document.getElementById('submitBtn');
+      const errorMessage = document.getElementById('errorMessage');
+      
+      const nombre = document.getElementById('nombre').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const ciudad = document.getElementById('ciudad').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
+      const tipo_usuario = document.querySelector('input[name="tipo_usuario"]:checked').value;
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
-      const errorMessage = document.getElementById('errorMessage');
 
-      // Validar contraseña
+      errorMessage.classList.add('hidden');
+
+      // Validaciones
       if (password.length < 6) {
-        errorMessage.textContent = 'La contraseña debe tener al menos 6 caracteres';
+        errorMessage.textContent = '⚠️ La contraseña debe tener al menos 6 caracteres';
         errorMessage.classList.remove('hidden');
         return;
       }
 
       if (password !== confirmPassword) {
-        errorMessage.textContent = 'Las contraseñas no coinciden';
+        errorMessage.textContent = '⚠️ Las contraseñas no coinciden';
         errorMessage.classList.remove('hidden');
         return;
       }
+
+      // Deshabilitar botón
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creando cuenta...';
 
       try {
         const response = await fetch(`${CONFIG.API_ENDPOINT}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, nombre, ciudad, telefono, tipo_usuario })
+          body: JSON.stringify({ 
+            email, 
+            password, 
+            nombre, 
+            ciudad: ciudad || null, 
+            telefono: telefono || null, 
+            tipo_usuario 
+          })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-          errorMessage.textContent = data.error || 'Error en el registro';
-          errorMessage.classList.remove('hidden');
-          return;
+          throw new Error(data.error || 'Error al crear la cuenta');
         }
 
-        // Guardar token y datos del usuario
+        // Guardar token y datos
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
 
-        // Redirigir a inicio
+        // Redirigir
         window.location.href = 'index.html';
       } catch (error) {
         console.error('Error:', error);
-        errorMessage.textContent = 'Error de conexión con el servidor';
+        errorMessage.textContent = '❌ ' + error.message;
         errorMessage.classList.remove('hidden');
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Crear mi cuenta';
       }
     }
 
-    // Si ya está logueado, redirigir a inicio
+    // Redirigir si ya está logueado
     if (localStorage.getItem('token')) {
       window.location.href = 'index.html';
     }

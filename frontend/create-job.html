@@ -3,119 +3,192 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Publicar Trabajo - TrabajoLocal</title>
+  <title>Publicar Trabajo - ConfiaChamba</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="config.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
+    .category-option:has(input:checked) {
+      border-color: #f97316;
+      background-color: #fff7ed;
+    }
+  </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-white">
+  
   <!-- Navbar -->
-  <nav class="bg-blue-600 text-white shadow-lg">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="index.html" class="text-2xl font-bold">🔧 TrabajoLocal</a>
+  <nav class="border-b bg-white sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-2">
+        <span class="text-2xl">💼</span>
+        <span class="text-xl font-bold text-gray-900">ConfiaChamba</span>
+      </a>
       <div class="flex gap-4 items-center">
-        <a href="index.html" class="hover:underline">Inicio</a>
-        <a href="profile.html" class="hover:underline">Mi Perfil</a>
-        <button onclick="logout()" class="bg-red-500 px-4 py-2 rounded hover:bg-red-600">Salir</button>
+        <a href="index.html" class="text-gray-700 hover:text-orange-600">Inicio</a>
+        <a href="profile.html" class="text-gray-700 hover:text-orange-600">Perfil</a>
+        <button onclick="logout()" class="text-gray-500 hover:text-red-600">Salir</button>
       </div>
     </div>
   </nav>
 
   <!-- Formulario -->
-  <section class="container mx-auto px-4 py-12">
-    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
-      <h2 class="text-3xl font-bold mb-6 text-center">Publicar Nuevo Trabajo</h2>
+  <section class="max-w-3xl mx-auto px-4 py-12">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Publica tu trabajo</h1>
+      <p class="text-gray-600">Llena los datos y empieza a recibir clientes</p>
+    </div>
+
+    <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm"></div>
+    <div id="successMessage" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 text-sm"></div>
+
+    <form id="jobForm" onsubmit="createJob(event)" class="space-y-6">
       
-      <form id="jobForm" onsubmit="createJob(event)">
-        <div class="mb-4">
-          <label class="block text-gray-700 font-bold mb-2">Título del Trabajo</label>
-          <input type="text" id="titulo" required placeholder="Ej: Reparación de tubería"
-                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
+      <!-- Título -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">¿Qué trabajo ofreces?</label>
+        <input type="text" id="titulo" required placeholder="Ej: Reparación de fugas en plomería"
+               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+               maxlength="100">
+        <p class="text-xs text-gray-500 mt-1">Sé específico para atraer más clientes</p>
+      </div>
 
-        <div class="mb-4">
-          <label class="block text-gray-700 font-bold mb-2">Descripción Detallada</label>
-          <textarea id="descripcion" required rows="5" placeholder="Describe el trabajo que ofreces..."
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+      <!-- Categoría con iconos -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-3">Categoría</label>
+        <div class="grid grid-cols-3 md:grid-cols-4 gap-3">
+          <label class="category-option cursor-pointer border-2 border-gray-200 rounded-lg p-3 text-center hover:border-orange-300 transition">
+            <input type="radio" name="categoria" value="plomeria" required class="hidden">
+            <div class="text-2xl mb-1">🔧</div>
+            <div class="text-xs font-medium text-gray-700">Plomería</div>
+          </label>
+          <label class="category-option cursor-pointer border-2 border-gray-200 rounded-lg p-3 text-center hover:border-orange-300 transition">
+            <input type="radio" name="categoria" value="electricidad" class="hidden">
+            <div class="text-2xl mb-1">⚡</div>
+            <div class="text-xs font-medium text-gray-700">Electricidad</div>
+          </label>
+          <label class="category-option cursor-pointer border-2 border-gray-200 rounded-lg p-3 text-center hover:border-orange-300 transition">
+            <input type="radio" name="categoria" value="carpinteria" class="hidden">
+            <div class="text-2xl mb-1">🪚</div>
+            <div class="text-xs font-medium text-gray-700">Carpintería</div>
+          </label>
+          <label class="category-option cursor-pointer border-2 border-gray-200 rounded-lg p-3 text-center hover:border-orange-300 transition">
+            <input type="radio" name="categoria" value="pintura" class="hidden">
+            <div class="text-2xl mb-1">🎨</div>
+            <div class="text-xs font-medium text-gray-700">Pintura</div>
+          </label>
+          <label class="category-option cursor-pointer border-2 border-gray-200 rounded-lg p-3 text-center hover:border-orange-300 transition">
+            <input type="radio" name="categoria" value="limpieza" class="hidden">
+            <div class="text-2xl mb-1">🧹</div>
+            <div class="text-xs font-medium text-gray-700">Limpieza</div>
+          </label>
+          <label class="category-option cursor-pointer border-2 border-gray-200 rounded-lg p-3 text-center hover:border-orange-300 transition">
+            <input type="radio" name="categoria" value="jardineria" class="hidden">
+            <div class="text-2xl mb-1">🌱</div>
+            <div class="text-xs font-medium text-gray-700">Jardinería</div>
+          </label>
+          <label class="category-option cursor-pointer border-2 border-gray-200 rounded-lg p-3 text-center hover:border-orange-300 transition">
+            <input type="radio" name="categoria" value="construccion" class="hidden">
+            <div class="text-2xl mb-1">🏗️</div>
+            <div class="text-xs font-medium text-gray-700">Construcción</div>
+          </label>
+          <label class="category-option cursor-pointer border-2 border-gray-200 rounded-lg p-3 text-center hover:border-orange-300 transition">
+            <input type="radio" name="categoria" value="otros" class="hidden">
+            <div class="text-2xl mb-1">✨</div>
+            <div class="text-xs font-medium text-gray-700">Otro</div>
+          </label>
         </div>
+      </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="block text-gray-700 font-bold mb-2">Categoría</label>
-            <select id="categoria" required
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="">Selecciona una categoría</option>
-              <option value="plomeria">Plomería</option>
-              <option value="electricidad">Electricidad</option>
-              <option value="carpinteria">Carpintería</option>
-              <option value="pintura">Pintura</option>
-              <option value="limpieza">Limpieza</option>
-              <option value="jardineria">Jardinería</option>
-              <option value="construccion">Construcción</option>
-              <option value="mudanzas">Mudanzas</option>
-              <option value="otros">Otros</option>
-            </select>
+      <!-- Descripción -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Cuéntanos más detalles</label>
+        <textarea id="descripcion" required rows="5" 
+                  placeholder="Describe tu experiencia, qué incluye el servicio, materiales que usas, etc."
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"></textarea>
+        <p class="text-xs text-gray-500 mt-1">Entre más detalles, mejor</p>
+      </div>
+
+      <!-- Precio y tipo -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">¿Cuánto cobras?</label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">$</span>
+            <input type="number" id="precio" required min="0" step="0.01" placeholder="100"
+                   class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
           </div>
-
-          <div>
-            <label class="block text-gray-700 font-bold mb-2">Precio</label>
-            <input type="number" id="precio" required min="0" step="0.01" placeholder="0.00"
-                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
         </div>
-
-        <div class="mb-4">
-          <label class="block text-gray-700 font-bold mb-2">Tipo de Precio</label>
-          <div class="flex gap-4">
-            <label class="flex items-center">
-              <input type="radio" name="tipo_precio" value="por_hora" required class="mr-2">
-              Por Hora
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">¿Cómo cobras?</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="cursor-pointer border-2 border-gray-300 rounded-lg p-3 text-center hover:border-orange-500 has-[:checked]:border-orange-500 has-[:checked]:bg-orange-50 transition">
+              <input type="radio" name="tipo_precio" value="por_hora" required class="hidden">
+              <div class="font-medium text-sm">Por hora</div>
             </label>
-            <label class="flex items-center">
-              <input type="radio" name="tipo_precio" value="por_trabajo" required class="mr-2">
-              Por Trabajo Completo
+            <label class="cursor-pointer border-2 border-gray-300 rounded-lg p-3 text-center hover:border-orange-500 has-[:checked]:border-orange-500 has-[:checked]:bg-orange-50 transition">
+              <input type="radio" name="tipo_precio" value="por_trabajo" class="hidden">
+              <div class="font-medium text-sm">Por trabajo</div>
             </label>
           </div>
         </div>
+      </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-6">
-          <div>
-            <label class="block text-gray-700 font-bold mb-2">Ubicación</label>
-            <input type="text" id="ubicacion" placeholder="Dirección o zona"
-                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-
-          <div>
-            <label class="block text-gray-700 font-bold mb-2">Ciudad</label>
-            <input type="text" id="ciudad" required placeholder="Tu ciudad"
-                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
+      <!-- Ubicación -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Ciudad</label>
+          <input type="text" id="ciudad" required placeholder="Tu ciudad"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
         </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Zona o colonia (opcional)</label>
+          <input type="text" id="ubicacion" placeholder="Ej: Centro, Zona Norte"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
+        </div>
+      </div>
 
-        <div id="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg hidden"></div>
-        <div id="successMessage" class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg hidden"></div>
-
+      <!-- Botones -->
+      <div class="flex gap-3 pt-4">
         <button type="submit" id="submitBtn"
-                class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">
-          Publicar Trabajo
+                class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition">
+          Publicar mi trabajo
         </button>
-      </form>
+        <a href="profile.html" 
+           class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-center">
+          Cancelar
+        </a>
+      </div>
+    </form>
+
+    <!-- Tips -->
+    <div class="mt-8 bg-orange-50 border border-orange-200 rounded-lg p-6">
+      <h3 class="font-bold text-gray-900 mb-3">💡 Tips para destacar:</h3>
+      <ul class="space-y-2 text-sm text-gray-700">
+        <li>✓ Usa un título claro y específico</li>
+        <li>✓ Explica qué incluye tu servicio</li>
+        <li>✓ Menciona tu experiencia o certificaciones</li>
+        <li>✓ Sé honesto con tus precios</li>
+      </ul>
     </div>
   </section>
 
   <script>
-
     function getToken() {
       return localStorage.getItem('token');
     }
 
     function logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = 'index.html';
+      if(confirm('¿Seguro que quieres salir?')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = 'index.html';
+      }
     }
 
     // Verificar autenticación
     if (!getToken()) {
+      alert('Necesitas iniciar sesión para publicar');
       window.location.href = 'login.html';
     }
 
@@ -134,17 +207,26 @@
 
       errorMessage.classList.add('hidden');
       successMessage.classList.add('hidden');
+
+      // Obtener categoría seleccionada
+      const categoriaInput = document.querySelector('input[name="categoria"]:checked');
+      if (!categoriaInput) {
+        errorMessage.textContent = '⚠️ Por favor selecciona una categoría';
+        errorMessage.classList.remove('hidden');
+        return;
+      }
+
       submitBtn.disabled = true;
       submitBtn.textContent = 'Publicando...';
 
       const data = {
-        titulo: document.getElementById('titulo').value,
-        descripcion: document.getElementById('descripcion').value,
-        categoria: document.getElementById('categoria').value,
+        titulo: document.getElementById('titulo').value.trim(),
+        descripcion: document.getElementById('descripcion').value.trim(),
+        categoria: categoriaInput.value,
         precio: parseFloat(document.getElementById('precio').value),
         tipo_precio: document.querySelector('input[name="tipo_precio"]:checked').value,
-        ubicacion: document.getElementById('ubicacion').value,
-        ciudad: document.getElementById('ciudad').value
+        ubicacion: document.getElementById('ubicacion').value.trim(),
+        ciudad: document.getElementById('ciudad').value.trim()
       };
 
       try {
@@ -160,10 +242,10 @@
         const result = await response.json();
 
         if (!response.ok) {
-          throw new Error(result.error || 'Error al publicar trabajo');
+          throw new Error(result.error || 'Error al publicar');
         }
 
-        successMessage.textContent = '¡Trabajo publicado exitosamente! Redirigiendo...';
+        successMessage.textContent = '✓ ¡Trabajo publicado! Redirigiendo...';
         successMessage.classList.remove('hidden');
 
         setTimeout(() => {
@@ -171,10 +253,12 @@
         }, 1500);
 
       } catch (error) {
-        errorMessage.textContent = error.message;
+        console.error('Error:', error);
+        errorMessage.textContent = '❌ ' + error.message;
         errorMessage.classList.remove('hidden');
+        
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Publicar Trabajo';
+        submitBtn.textContent = 'Publicar mi trabajo';
       }
     }
   </script>
