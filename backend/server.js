@@ -18,8 +18,9 @@ const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
     ? [
         'https://ss-confia-chamba.vercel.app',
+        'https://www.confiachamba.online',
         'https://ss-confiachamba.onrender.com',
-        process.env.FRONTEND_URL || 'https://ss-confia-chamba.vercel.app'
+        process.env.FRONTEND_URL || 'https://ss-confia-chamba.vercel.app','https://www.confiachamba.online'
       ]
     : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000'],
   credentials: true,
