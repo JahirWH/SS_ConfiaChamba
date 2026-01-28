@@ -1,7 +1,6 @@
 // Detectar si está en desarrollo o producción
 if (typeof isDevelopment === 'undefined') {
-  var isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-}
+    var isDevelopment = window.location.protocol === 'http:';}
 
 if (typeof CONFIG === 'undefined') {
   var CONFIG = {
