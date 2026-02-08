@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat - ConfiaChamba</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="config.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
+    .chat-container { height: 100vh; }
+    .messages-container { height: calc(100vh - 200px); overflow-y: auto; }
+    .message-bubble {
+      max-width: 70%;
+      word-wrap: break-word;
+      padding: 12px 16px;
+      border-radius: 12px;
+      animation: slideIn 0.3s ease;
+    }
+    .message-bubble.sent {
+      background-color: #4f46e5;
+      color: white;
+      margin-left: auto;
+    }
+    .message-bubble.received {
+      background-color: #e5e7eb;
+      color: #1f2937;
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .conversation-item {
+      border-left: 4px solid transparent;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .conversation-item:hover {
+      background-color: #f3f4f6;
+      border-left-color: #4f46e5;
+    }
+    .conversation-item.active {
+      background-color: #eef2ff;
+      border-left-color: #4f46e5;
+    }
+    .badge-new {
+      display: inline-block;
+      background-color: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Navbar -->
+  <nav class="border-b bg-white sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-2">
+        <span class="text-xl font-bold text-gray-900">ConfiaChamba</span>
+      </a>
+      <div id="navLinks"></div>
+    </div>
+  </nav>
+
+  <div class="chat-container flex">
+    <!-- Sidebar de conversaciones -->
+    <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
+      <!-- Header -->
+      <div class="p-4 border-b border-gray-200">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Mensajes</h2>
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Buscar conversación..." 
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+      </div>
+
+      <!-- Lista de conversaciones -->
+      <div id="conversationsList" class="flex-1 overflow-y-auto">
+        <div class="p-4 text-center text-gray-500">
+          Cargando conversaciones...
+        </div>
+      </div>
+    </div>
+
+    <!-- Area principal del chat -->
+    <div class="flex-1 flex flex-col bg-gray-50" id="chatArea">
+      <div class="flex-1 flex items-center justify-center">
+        <div class="text-center text-gray-500">
+          <p class="text-lg">Selecciona una conversación para comenzar</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template para el chat activo -->
+  <template id="chatTemplate">
+    <!-- Header del chat -->
+    <div class="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+      <div>
+        <h3 class="text-lg font-bold text-gray-900" id="chatUserName"></h3>
+        <p class="text-sm text-gray-500" id="chatUserEmail"></p>
+      </div>
+      <button id="closeChatBtn" class="text-gray-500 hover:text-gray-700">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mensajes -->
+    <div id="messagesContainer" class="messages-container p-4 space-y-4"></div>
+
+    <!-- Input de mensaje -->
+    <div class="bg-white border-t border-gray-200 p-4">
+      <form id="messageForm" class="flex gap-3">
+        <input 
+          type="text" 
+          id="messageInput" 
+          placeholder="Escribe tu mensaje..." 
+          class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          required
+        >
+        <button 
+          type="submit" 
+          class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+        >
+          Enviar
+        </button>
+      </form>
+    </div>
+  </template>
+
+  <!-- <script>
+    let currentUserId = null;
+    let currentConversationUserId = null;
+    let conversations = [];
+    const API_URL = getApiUrl();
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = JSON.parse(localStorage.getItem('user'));
+      
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      currentUserId = user.id;
+      renderNavLinks();
+      loadConversations();
+
+      // Cargar conversaciones cada 3 segundos
+      setInterval(loadConversations, 3000);
+    });
+
+    async function loadConversations() {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/api/messages/list`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            window.location.href = 'login.html';
+          }
+          return;
+        }
+
+        conversations = await response.json();
+        renderConversations();
+      } catch (error) {
+        console.error('Error al cargar conversaciones:', error);
+      }
+    }
+
+    function renderConversations() {
+      const container = document.getElementById('conversationsList');
+      const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+
+      const filtered = conversations.filter(conv => 
+        conv.nombre.toLowerCase().includes(searchTerm) ||
+        conv.email.toLowerCase().includes(searchTerm)
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="p-4 text-center text-gray-500">No hay conversaciones</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(conv => `
+        <div 
+          class="conversation-item p-4 border-b border-gray-100 ${currentConversationUserId === conv.userId ? 'active' : ''}"
+          onclick="selectConversation(${conv.userId}, '${conv.nombre.replace(/'/g, "\\'")}', '${conv.email}')"
+        >
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold text-gray-900">${conv.nombre}</h4>
+            ${conv.noLeidos > 0 ? `<span class="badge-new">${conv.noLeidos}</span>` : ''}
+          </div>
+          <p class="text-sm text-gray-600 line-clamp-2">${conv.ultimoMensaje}</p>
+          <p class="text-xs text-gray-400 mt-2">${formatDate(conv.creado_en)}</p>
+        </div>
+      `).join('');
+    }
+
+    async function selectConversation(userId, nombre, email) {
+      currentConversationUserId = userId;
+      renderConversations();
+
+      const chatArea = document.getElementById('chatArea');
+      const template = document.getElementById('chatTemplate');
+      chatArea.innerHTML = template.innerHTML;
+
+      document.getElementById('chatUserName').textContent = nombre;
+      document.getElementById('chatUserEmail').textContent = email;
+
+      document.getElementById('closeChatBtn').onclick = () => {
+        currentConversationUserId = null;
+        chatArea.innerHTML = '<div class="flex-1 flex items-center justify-center"><div class="text-center text-gray-500"><p class="text-lg">Selecciona una conversación para comenzar</p></div></div>';
+        renderConversations();
+      };
+
+      document.getElementById('messageForm').onsubmit = async (e) => {
+        e.preventDefault();
+        await sendMessage();
+      };
+
+      await loadMessages(userId);
+      
+      // Cargar nuevos mensajes cada 2 segundos
+      const messageInterval = setInterval(async () => {
+        if (currentConversationUserId === userId) {
+          await loadMessages(userId);
+        } else {
+          clearInterval(messageInterval);
+        }
+      }, 2000);
+    }
+
+    async function loadMessages(conversationUserId) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/api/messages/conversation/${conversationUserId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) return;
+
+        const messages = await response.json();
+        renderMessages(messages);
+      } catch (error) {
+        console.error('Error al cargar mensajes:', error);
+      }
+    }
+
+    function renderMessages(messages) {
+      const container = document.getElementById('messagesContainer');
+      if (!container) return;
+
+      container.innerHTML = messages.map(msg => `
+        <div class="flex ${msg.emisor_id === currentUserId ? 'justify-end' : 'justify-start'}">
+          <div class="message-bubble ${msg.emisor_id === currentUserId ? 'sent' : 'received'}">
+            <p class="text-sm">${escapeHtml(msg.contenido)}</p>
+            <p class="text-xs mt-1 ${msg.emisor_id === currentUserId ? 'text-indigo-100' : 'text-gray-500'}">
+              ${formatTime(msg.creado_en)}
+            </p>
+          </div>
+        </div>
+      `).join('');
+
+      // Scroll al final
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const contenido = input.value.trim();
+
+      if (!contenido) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/api/messages`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            receptor_id: currentConversationUserId,
+            contenido
+          })
+        });
+
+        if (response.ok) {
+          input.value = '';
+          await loadMessages(currentConversationUserId);
+        }
+      } catch (error) {
+        console.error('Error al enviar mensaje:', error);
+        alert('Error al enviar el mensaje');
+      }
+    }
+
+    function formatDate(date) {
+      const d = new Date(date);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      if (d.toDateString() === today.toDateString()) {
+        return d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+      } else if (d.toDateString() === yesterday.toDateString()) {
+        return 'Ayer';
+      } else {
+        return d.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' });
+      }
+    }
+
+    function formatTime(date) {
+      const d = new Date(date);
+      return d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Buscar conversaciones
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+          searchInput.addEventListener('input', renderConversations);
+        }
+      }, 100);
+    });
+  </script> -->
+</body>
+</html>

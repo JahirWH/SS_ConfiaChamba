@@ -39,10 +39,12 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const jobRoutes = require('./routes/jobs');
+const messagesRoutes = require('./routes/messages');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/messages', messagesRoutes);
 
 // Ruta de prueba
 app.get('/api/health', (req, res) => {
