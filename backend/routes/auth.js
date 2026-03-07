@@ -7,7 +7,8 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try {
     const { email, password, nombre, ciudad, telefono, tipo_usuario } = req.body;
-    const supabase = req.app.locals.supabase;
+    const supabase = req.app.locals.db;
+    // ya no es req.app.locals.supabasel
 
     // Validaciones
     if (!email || !password || !nombre) {
