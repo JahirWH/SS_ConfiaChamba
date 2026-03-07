@@ -65,8 +65,8 @@ app.locals.db = pool;
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
-// const jobRoutes = require('./routes/jobs');
-// const messagesRoutes = require('./routes/messages');
+const jobRoutes = require('./routes/jobs');
+const messagesRoutes = require('./routes/messages');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
