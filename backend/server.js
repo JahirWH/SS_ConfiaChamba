@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 4000;
 ========================= */
 
 const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
@@ -64,8 +65,8 @@ app.locals.db = pool;
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
-const jobRoutes = require('./routes/jobs');
-const messagesRoutes = require('./routes/messages');
+// const jobRoutes = require('./routes/jobs');
+// const messagesRoutes = require('./routes/messages');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -78,22 +79,18 @@ app.use('/api/messages', messagesRoutes);
 
 app.get('/api/health', async (req, res) => {
   try {
-
     const result = await pool.query('SELECT NOW()');
-
     res.json({
       status: 'ok',
       db: 'connected',
-      time: result.rows[0]
+      time: result.rows[0].now
     });
-
   } catch (err) {
-
+    console.error(err);
     res.status(500).json({
       status: 'error',
-      db: 'not connected'
+      message: err.message
     });
-
   }
 });
 

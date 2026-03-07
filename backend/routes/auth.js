@@ -1,62 +1,54 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
 const router = express.Router();
 
-// POST /api/auth/register - Registrar nuevo usuario
+// POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
     const { email, password, nombre, ciudad, telefono, tipo_usuario } = req.body;
-    const supabase = req.app.locals.db;
-    // ya no es req.app.locals.supabasel
+    const db = req.app.locals.db;
 
-    // Validaciones
     if (!email || !password || !nombre) {
-      return res.status(400).json({ error: 'Email, contraseña y nombre son requeridos' });
-    }
-
-    // Verificar si el usuario ya existe
-    const { data: existingUser } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', email)
-      .single();
-
-    if (existingUser) {
-      return res.status(400).json({ error: 'El email ya está registrado' });
-    }
-
-    // Hashear contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Insertar nuevo usuario
-    const { data: newUser, error } = await supabase
-      .from('users')
-      .insert([
-        {
-          email,
-          password_hash: hashedPassword,
-          nombre,
-          ciudad: ciudad || '',
-          telefono: telefono || '',
-          tipo_usuario: tipo_usuario || 'trabajador',
-          promedio_calificacion: 0,
-          total_trabajos: 0
-        }
-      ])
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error de Supabase en registro:', error);
-      return res.status(500).json({ 
-        error: 'Error al registrar usuario',
-        details: error.message,
-        code: error.code
+      return res.status(400).json({
+        error: 'Email, contraseña y nombre son requeridos'
       });
     }
 
-    // Generar JWT
+    // verificar si ya existe
+    const existingUser = await db.query(
+      'SELECT id FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({
+        error: 'El email ya está registrado'
+      });
+    }
+
+    // hash contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // insertar usuario
+    const result = await db.query(
+      `INSERT INTO users 
+      (email, password_hash, nombre, ciudad, telefono, tipo_usuario, promedio_calificacion, total_trabajos)
+      VALUES ($1,$2,$3,$4,$5,$6,0,0)
+      RETURNING id,email,nombre,ciudad,tipo_usuario`,
+      [
+        email,
+        hashedPassword,
+        nombre,
+        ciudad || '',
+        telefono || '',
+        tipo_usuario || 'trabajador'
+      ]
+    );
+
+    const newUser = result.rows[0];
+
     const token = jwt.sign(
       { userId: newUser.id, email: newUser.email },
       process.env.JWT_SECRET,
@@ -65,50 +57,52 @@ router.post('/register', async (req, res) => {
 
     res.json({
       token,
-      user: {
-        id: newUser.id,
-        email: newUser.email,
-        nombre: newUser.nombre,
-        ciudad: newUser.ciudad,
-        tipo_usuario: newUser.tipo_usuario
-      }
+      user: newUser
     });
+
   } catch (error) {
     console.error('Error en registro:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({
+      error: 'Error interno del servidor'
+    });
   }
 });
 
-// POST /api/auth/login - Iniciar sesión
+
+// POST /api/auth/login
 router.post('/login', async (req, res) => {
   try {
+
     const { email, password } = req.body;
-    const supabase = req.app.locals.supabase;
+    const db = req.app.locals.db;
 
-    // Validaciones
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email y contraseña son requeridos' });
+      return res.status(400).json({
+        error: 'Email y contraseña son requeridos'
+      });
     }
 
-    // Buscar usuario
-    const { data: user, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email)
-      .single();
+    const result = await db.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]
+    );
 
-    if (error || !user) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
+    if (result.rows.length === 0) {
+      return res.status(401).json({
+        error: 'Credenciales inválidas'
+      });
     }
 
-    // Verificar contraseña
+    const user = result.rows[0];
+
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordMatch) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
+      return res.status(401).json({
+        error: 'Credenciales inválidas'
+      });
     }
 
-    // Generar JWT
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET,
@@ -127,15 +121,21 @@ router.post('/login', async (req, res) => {
         total_trabajos: user.total_trabajos
       }
     });
+
   } catch (error) {
     console.error('Error en login:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({
+      error: 'Error interno del servidor'
+    });
   }
 });
 
-// POST /api/auth/logout - Cerrar sesión (opcional, manejado en frontend)
+
+// logout (solo frontend realmente)
 router.post('/logout', (req, res) => {
-  res.json({ message: 'Sesión cerrada correctamente' });
+  res.json({
+    message: 'Sesión cerrada correctamente'
+  });
 });
 
 module.exports = router;
