@@ -7,6 +7,7 @@ const authenticateToken = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ error: 'Token no proporcionado' });
   }
+  
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
@@ -15,6 +16,7 @@ const authenticateToken = (req, res, next) => {
     req.user = user; // { userId, email }
     next();
   });
+  
 };
 
 module.exports = authenticateToken;

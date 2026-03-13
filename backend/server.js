@@ -30,12 +30,12 @@ const corsOptions = {
     ? [
         'https://www.confiachamba.online',
         'https://confiachamba.online',
-        'https://ss-confiachamba.onrender.com'
+        'https://confiachamba.online'
       ]
     : [
-        'http://localhost:3000',
+        'http://localhost:4000',
         'http://localhost:5173',
-        'http://127.0.0.1:3000'
+        'http://127.0.0.1:4000'
       ],
   credentials: true
 };
@@ -106,8 +106,6 @@ app.get('*', (req, res) => {
    START SERVER
 ========================= */
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
-});
+app.listen(PORT, '0.0.0.0', () => console.log(`Servidor corriendo en puerto ${PORT}`));
 
 module.exports = app;

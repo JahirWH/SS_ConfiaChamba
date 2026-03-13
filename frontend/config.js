@@ -1,18 +1,17 @@
 // Detectar si está en desarrollo o producción
-if (typeof isDevelopment === 'undefined') {
-    var isDevelopment = window.location.protocol === 'http:';}
-
+var isDevelopment = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    
 if (typeof CONFIG === 'undefined') {
   var CONFIG = {
     // API URL para las llamadas HTTP
     API_URL: isDevelopment 
-      ? 'http://localhost:3000' 
-      : 'https://ss-confiachamba.onrender.com',
+      ? 'http://localhost:4000' 
+      : 'https://confiachamba.online',
     
     // API URL con /api para rutas
     API_ENDPOINT: isDevelopment
-      ? 'http://localhost:3000/api'
-      : 'https://ss-confiachamba.onrender.com/api',
+      ? 'http://localhost:4000/api'
+      : 'https://confiachamba.online/api',
     
     // URLs de la plataforma
     APP_NAME: 'ConfiaChamba',
@@ -25,7 +24,7 @@ if (typeof CONFIG === 'undefined') {
 
 // Función global para obtener API URL
 function getApiUrl() {
-  return CONFIG.API_URL || 'http://localhost:3000';
+  return CONFIG.API_URL || 'http://localhost:4000';
 }
 
 // Función global para verificar si el usuario está logueado

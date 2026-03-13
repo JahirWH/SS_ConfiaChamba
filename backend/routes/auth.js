@@ -66,6 +66,7 @@ router.post('/register', async (req, res) => {
       error: 'Error interno del servidor'
     });
   }
+  
 });
 
 

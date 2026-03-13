@@ -2,295 +2,324 @@ const express = require('express');
 const router = express.Router();
 const authenticateToken = require('../middleware/auth');
 
-// GET /api/jobs - Listar todos los trabajos (con filtros opcionales)
+/* =========================
+   GET /api/jobs
+   Listar trabajos
+========================= */
+
 router.get('/', async (req, res) => {
   try {
+    const db = req.app.locals.db;
     const { ciudad, categoria, limite = 20 } = req.query;
-    const supabase = req.app.locals.supabase;
 
-    let query = supabase
-      .from('jobs')
-      .select(`
-        *,
-        user:user_id (id, nombre, ciudad, promedio_calificacion, total_trabajos)
-      `)
-      .eq('estado', 'activo')
-      .order('created_at', { ascending: false })
-      .limit(parseInt(limite));
+    let query = `
+      SELECT 
+        j.*,
+        u.id as user_id,
+        u.nombre,
+        u.ciudad as user_ciudad,
+        u.promedio_calificacion,
+        u.total_trabajos
+      FROM jobs j
+      JOIN users u ON j.user_id = u.id
+      WHERE j.estado = 'activo'
+    `;
+
+    const params = [];
+    let i = 1;
 
     if (ciudad) {
-      query = query.eq('ciudad', ciudad);
+      query += ` AND j.ciudad = $${i++}`;
+      params.push(ciudad);
     }
 
     if (categoria) {
-      query = query.eq('categoria', categoria);
+      query += ` AND j.categoria = $${i++}`;
+      params.push(categoria);
     }
 
-    const { data: jobs, error } = await query;
+    query += ` ORDER BY j.created_at DESC LIMIT $${i}`;
+    params.push(parseInt(limite));
 
-    if (error) {
-      return res.status(500).json({ error: 'Error al obtener trabajos' });
-    }
+    const result = await db.query(query, params);
 
-    res.json(jobs);
+    res.json(result.rows);
+
   } catch (error) {
     console.error('Error al listar trabajos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
-// GET /api/jobs/:id - Obtener un trabajo específico
+
+/* =========================
+   GET /api/jobs/:id
+   Obtener trabajo específico
+========================= */
+
 router.get('/:id', async (req, res) => {
   try {
-    const supabase = req.app.locals.supabase;
+    const db = req.app.locals.db;
 
-    const { data: job, error } = await supabase
-      .from('jobs')
-      .select(`
-        *,
-        user:user_id (id, nombre, ciudad, telefono, promedio_calificacion, total_trabajos, experiencia)
-      `)
-      .eq('id', req.params.id)
-      .single();
+    const result = await db.query(
+      `
+      SELECT 
+        j.*,
+        u.id as user_id,
+        u.nombre,
+        u.ciudad,
+        u.telefono,
+        u.promedio_calificacion,
+        u.total_trabajos
+      FROM jobs j
+      JOIN users u ON j.user_id = u.id
+      WHERE j.id = $1
+      `,
+      [req.params.id]
+    );
 
-    if (error || !job) {
+    if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Trabajo no encontrado' });
     }
 
-    res.json(job);
+    res.json(result.rows[0]);
+
   } catch (error) {
     console.error('Error al obtener trabajo:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
-// POST /api/jobs - Crear un nuevo trabajo (requiere autenticación)
+
+/* =========================
+   POST /api/jobs
+   Crear trabajo
+========================= */
+
 router.post('/', authenticateToken, async (req, res) => {
   try {
-    const { titulo, descripcion, categoria, precio, tipo_precio, ubicacion, ciudad } = req.body;
-    const supabase = req.app.locals.supabase;
+    const db = req.app.locals.db;
 
-    // Validaciones
+    const {
+      titulo,
+      descripcion,
+      categoria,
+      precio,
+      tipo_precio,
+      ubicacion,
+      ciudad
+    } = req.body;
+
     if (!titulo || !descripcion || !categoria || !precio || !tipo_precio) {
-      return res.status(400).json({ error: 'Faltan campos requeridos' });
+      return res.status(400).json({
+        error: 'Faltan campos requeridos'
+      });
     }
 
-    if (!['por_hora', 'por_trabajo'].includes(tipo_precio)) {
-      return res.status(400).json({ error: 'tipo_precio debe ser "por_hora" o "por_trabajo"' });
-    }
-
-    const { data: newJob, error } = await supabase
-      .from('jobs')
-      .insert([
-        {
-          user_id: req.user.userId,
-          titulo,
-          descripcion,
-          categoria,
-          precio: parseFloat(precio),
-          tipo_precio,
-          ubicacion,
-          ciudad
-        }
-      ])
-      .select(`
-        *,
-        user:user_id (id, nombre, ciudad, promedio_calificacion)
-      `)
-      .single();
-
-    if (error) {
-      return res.status(500).json({ error: 'Error al crear trabajo', details: error.message });
-    }
+    const result = await db.query(
+      `
+      INSERT INTO jobs
+      (user_id,titulo,descripcion,categoria,precio,tipo_precio,ubicacion,ciudad,estado)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'activo')
+      RETURNING *
+      `,
+      [
+        req.user.userId,
+        titulo,
+        descripcion,
+        categoria,
+        precio,
+        tipo_precio,
+        ubicacion,
+        ciudad
+      ]
+    );
 
     res.status(201).json({
-      message: 'Trabajo publicado exitosamente',
-      job: newJob
+      message: 'Trabajo creado',
+      job: result.rows[0]
     });
+
   } catch (error) {
     console.error('Error al crear trabajo:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
-// PUT /api/jobs/:id - Actualizar un trabajo (solo el creador)
+
+/* =========================
+   PUT /api/jobs/:id
+   Actualizar trabajo
+========================= */
+
 router.put('/:id', authenticateToken, async (req, res) => {
   try {
+
+    const db = req.app.locals.db;
+
+    const jobCheck = await db.query(
+      'SELECT user_id FROM jobs WHERE id = $1',
+      [req.params.id]
+    );
+
+    if (jobCheck.rows.length === 0) {
+      return res.status(404).json({ error: 'Trabajo no encontrado' });
+    }
+
+    if (jobCheck.rows[0].user_id !== req.user.userId) {
+      return res.status(403).json({
+        error: 'No tienes permiso'
+      });
+    }
+
     const { titulo, descripcion, precio, ubicacion, estado } = req.body;
-    const supabase = req.app.locals.supabase;
 
-    // Verificar que el trabajo pertenece al usuario
-    const { data: job } = await supabase
-      .from('jobs')
-      .select('user_id')
-      .eq('id', req.params.id)
-      .single();
+    const result = await db.query(
+      `
+      UPDATE jobs
+      SET titulo = COALESCE($1,titulo),
+          descripcion = COALESCE($2,descripcion),
+          precio = COALESCE($3,precio),
+          ubicacion = COALESCE($4,ubicacion),
+          estado = COALESCE($5,estado)
+      WHERE id = $6
+      RETURNING *
+      `,
+      [titulo, descripcion, precio, ubicacion, estado, req.params.id]
+    );
 
-    if (!job || job.user_id !== req.user.userId) {
-      return res.status(403).json({ error: 'No tienes permiso para editar este trabajo' });
-    }
+    res.json(result.rows[0]);
 
-    const updates = {};
-    if (titulo) updates.titulo = titulo;
-    if (descripcion) updates.descripcion = descripcion;
-    if (precio) updates.precio = parseFloat(precio);
-    if (ubicacion) updates.ubicacion = ubicacion;
-    if (estado) updates.estado = estado;
-
-    const { data: updatedJob, error } = await supabase
-      .from('jobs')
-      .update(updates)
-      .eq('id', req.params.id)
-      .select()
-      .single();
-
-    if (error) {
-      return res.status(500).json({ error: 'Error al actualizar trabajo' });
-    }
-
-    res.json({
-      message: 'Trabajo actualizado exitosamente',
-      job: updatedJob
-    });
   } catch (error) {
     console.error('Error al actualizar trabajo:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
-// DELETE /api/jobs/:id - Eliminar un trabajo (solo el creador)
+
+/* =========================
+   DELETE /api/jobs/:id
+========================= */
+
 router.delete('/:id', authenticateToken, async (req, res) => {
   try {
-    const supabase = req.app.locals.supabase;
 
-    // Verificar que el trabajo pertenece al usuario
-    const { data: job } = await supabase
-      .from('jobs')
-      .select('user_id')
-      .eq('id', req.params.id)
-      .single();
+    const db = req.app.locals.db;
 
-    if (!job || job.user_id !== req.user.userId) {
-      return res.status(403).json({ error: 'No tienes permiso para eliminar este trabajo' });
+    const jobCheck = await db.query(
+      'SELECT user_id FROM jobs WHERE id=$1',
+      [req.params.id]
+    );
+
+    if (jobCheck.rows.length === 0) {
+      return res.status(404).json({
+        error: 'Trabajo no encontrado'
+      });
     }
 
-    const { error } = await supabase
-      .from('jobs')
-      .delete()
-      .eq('id', req.params.id);
-
-    if (error) {
-      return res.status(500).json({ error: 'Error al eliminar trabajo' });
+    if (jobCheck.rows[0].user_id !== req.user.userId) {
+      return res.status(403).json({
+        error: 'No tienes permiso'
+      });
     }
 
-    res.json({ message: 'Trabajo eliminado exitosamente' });
+    await db.query(
+      'DELETE FROM jobs WHERE id=$1',
+      [req.params.id]
+    );
+
+    res.json({
+      message: 'Trabajo eliminado'
+    });
+
   } catch (error) {
     console.error('Error al eliminar trabajo:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({
+      error: 'Error interno del servidor'
+    });
   }
 });
 
-// POST /api/jobs/:id/reviews - Crear una reseña para un trabajo
+
+/* =========================
+   REVIEWS
+========================= */
+
 router.post('/:id/reviews', authenticateToken, async (req, res) => {
   try {
+
+    const db = req.app.locals.db;
     const { calificacion, comentario } = req.body;
-    const jobId = req.params.id;
-    const supabase = req.app.locals.supabase;
 
-    // Validaciones
     if (!calificacion || calificacion < 1 || calificacion > 5) {
-      return res.status(400).json({ error: 'La calificación debe estar entre 1 y 5' });
+      return res.status(400).json({
+        error: 'Calificación inválida'
+      });
     }
 
-    // Obtener el trabajo y el trabajador
-    const { data: job } = await supabase
-      .from('jobs')
-      .select('user_id')
-      .eq('id', jobId)
-      .single();
+    const job = await db.query(
+      'SELECT user_id FROM jobs WHERE id=$1',
+      [req.params.id]
+    );
 
-    if (!job) {
-      return res.status(404).json({ error: 'Trabajo no encontrado' });
+    if (job.rows.length === 0) {
+      return res.status(404).json({
+        error: 'Trabajo no encontrado'
+      });
     }
 
-    // No puedes reseñarte a ti mismo
-    if (job.user_id === req.user.userId) {
-      return res.status(400).json({ error: 'No puedes reseñar tu propio trabajo' });
-    }
+    const review = await db.query(
+      `
+      INSERT INTO reviews
+      (job_id,user_id,reviewer_id,calificacion,comentario)
+      VALUES ($1,$2,$3,$4,$5)
+      RETURNING *
+      `,
+      [
+        req.params.id,
+        job.rows[0].user_id,
+        req.user.userId,
+        calificacion,
+        comentario
+      ]
+    );
 
-    // Crear la reseña
-    const { data: newReview, error } = await supabase
-      .from('reviews')
-      .insert([
-        {
-          job_id: jobId,
-          user_id: job.user_id,
-          reviewer_id: req.user.userId,
-          calificacion: parseInt(calificacion),
-          comentario
-        }
-      ])
-      .select(`
-        *,
-        reviewer:reviewer_id (nombre)
-      `)
-      .single();
+    res.status(201).json(review.rows[0]);
 
-    if (error) {
-      return res.status(500).json({ error: 'Error al crear reseña' });
-    }
-
-    // Actualizar estadísticas del trabajador
-    const { data: reviews } = await supabase
-      .from('reviews')
-      .select('calificacion')
-      .eq('user_id', job.user_id);
-
-    const totalReviews = reviews.length;
-    const avgRating = reviews.reduce((sum, r) => sum + r.calificacion, 0) / totalReviews;
-
-    await supabase
-      .from('users')
-      .update({
-        promedio_calificacion: avgRating.toFixed(2),
-        total_trabajos: totalReviews,
-        experiencia: totalReviews * 10
-      })
-      .eq('id', job.user_id);
-
-    res.status(201).json({
-      message: 'Reseña creada exitosamente',
-      review: newReview
-    });
   } catch (error) {
     console.error('Error al crear reseña:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({
+      error: 'Error interno del servidor'
+    });
   }
 });
 
-// GET /api/jobs/:id/reviews - Obtener reseñas de un trabajo
+
 router.get('/:id/reviews', async (req, res) => {
   try {
-    const supabase = req.app.locals.supabase;
 
-    const { data: reviews, error } = await supabase
-      .from('reviews')
-      .select(`
-        *,
-        reviewer:reviewer_id (nombre, ciudad)
-      `)
-      .eq('job_id', req.params.id)
-      .order('created_at', { ascending: false });
+    const db = req.app.locals.db;
 
-    if (error) {
-      return res.status(500).json({ error: 'Error al obtener reseñas' });
-    }
+    const result = await db.query(
+      `
+      SELECT r.*, u.nombre
+      FROM reviews r
+      JOIN users u ON r.reviewer_id = u.id
+      WHERE r.job_id = $1
+      ORDER BY r.created_at DESC
+      `,
+      [req.params.id]
+    );
 
-    res.json(reviews);
+    res.json(result.rows);
+
   } catch (error) {
     console.error('Error al obtener reseñas:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({
+      error: 'Error interno del servidor'
+    });
   }
 });
+
 
 module.exports = router;
