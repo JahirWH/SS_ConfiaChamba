@@ -1,23 +1,26 @@
 // Detectar si está en desarrollo o producción
 var isDevelopment = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-    
+
+
+
+
 if (typeof CONFIG === 'undefined') {
   var CONFIG = {
     // API URL para las llamadas HTTP
-    API_URL: isDevelopment 
-      ? 'http://localhost:4000' 
+    API_URL: isDevelopment
+      ? 'http://localhost:4000'
       : 'https://confiachamba.online',
-    
+
     // API URL con /api para rutas
     API_ENDPOINT: isDevelopment
       ? 'http://localhost:4000/api'
       : 'https://confiachamba.online/api',
-    
+
     // URLs de la plataforma
     APP_NAME: 'ConfiaChamba',
     SUPPORT_EMAIL: 'soporte@confiacham.local'
   };
-  
+
   // Hacer disponible globalmente
   window.CONFIG = CONFIG;
 }
@@ -34,7 +37,7 @@ function isLoggedIn() {
 
 // Función para logout
 function logout() {
-  if(confirm('¿Seguro que quieres salir?')) {
+  if (confirm('¿Seguro que quieres salir?')) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     window.location.reload();
@@ -55,7 +58,7 @@ async function updateUnreadCount() {
 
     const conversations = await response.json();
     const unreadCount = conversations.reduce((sum, conv) => sum + (conv.noLeidos || 0), 0);
-    
+
     const badge = document.getElementById('unreadBadge');
     if (badge) {
       if (unreadCount > 0) {
@@ -91,7 +94,7 @@ function renderNavLinks() {
         <button onclick="logout()" class="text-gray-500 hover:text-red-600">Salir</button>
       </div>
     `;
-    
+
     // Cargar contador de mensajes no leídos
     updateUnreadCount();
   } else {

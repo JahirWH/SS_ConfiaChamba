@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // GET /api/users — listar usuarios
+
 router.get('/', async (req, res) => {
   try {
     const db = req.app.locals.db;

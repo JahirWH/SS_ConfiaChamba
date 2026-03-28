@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ConfiaChamba - Encuentra chambitas cerca de ti</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="config.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <style>
-    * { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
-    .job-card { transition: transform 0.2s ease; }
-    .job-card:hover { transform: translateY(-4px); }
-    .search-box { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    * {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    .job-card {
+      transition: transform 0.2s ease;
+    }
+
+    .job-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .search-box {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
   </style>
 </head>
+
 <body class="bg-white">
-  
+
   <!-- Navbar simple -->
   <nav class="border-b bg-white sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -32,92 +46,95 @@
     <div class="max-w-6xl mx-auto px-4">
       <div class="flex items-center gap-8">
 
-      <div class="max-w-3xl">
-        <h1 class="text-5xl font-bold text-gray-900 mb-4 leading-tight">
-          Encuentra trabajadores <br>
-          <span class="text-orange-600">cerca de ti</span>
-        </h1>
-        <p class="text-xl text-gray-700 mb-8">
-          Plomeros, electricistas, pintores... gente de confianza que hace bien la chamba
-        </p>
-        
-        <!-- Búsqueda -->
-        <div class="search-box bg-white rounded-xl p-4 mb-6">
-          <div class="flex flex-col md:flex-row gap-3">
-            <input type="text" id="searchCity" value="" placeholder="¿Dónde?" 
-                 class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
-                 autocomplete="off" list="statesList">
-            <datalist id="statesList">
-              <option value="Ciudad de México">
-              <option value="Jalisco">
-              <option value="Nuevo León">
-              <option value="Guanajuato">
-              <option value="Puebla">
-              <option value="Veracruz">
-              <option value="México">
-              <option value="Michoacán">
-              <option value="Chihuahua">
-              <option value="Oaxaca">
-              <option value="Guerrero">
-              <option value="Tamaulipas">
-              <option value="Sinaloa">
-              <option value="Coahuila">
-              <option value="Baja California">
-              <option value="Sonora">
-              <option value="Yucatán">
-              <option value="Qintana Roo">
-              <option value="Tlaxcala">
-              <option value="Morelos">
-              <option value="Nayarit">
-              <option value="Aguascalientes">
-              <option value="Zacatecas">
-              <option value="San Luis Potosí">
-              <option value="Querétaro">
-              <option value="Campeche">
-              <option value="Tabasco">
-              <option value="Durango">
-              <option value="Colima">
-              <option value="Baja California Sur">
-            </datalist>
+        <div class="max-w-3xl">
+          <h1 class="text-5xl font-bold text-gray-900 mb-4 leading-tight">
+            Encuentra trabajadores <br>
+            <span class="text-orange-600">cerca de ti</span>
+          </h1>
+          <p class="text-xl text-gray-700 mb-8">
+            Plomeros, electricistas, pintores... gente de confianza que hace bien la chamba
+          </p>
 
-            <select id="searchCategory" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
-              <option value="">¿Qué necesitas?</option>
-              <option value="plomeria">Plomería</option>
-              <option value="electricidad">Electricidad</option>
-              <option value="carpinteria">Carpintería</option>
-              <option value="pintura">Pintura</option>
-              <option value="limpieza">Limpieza</option>
-              <option value="jardineria">Jardinería</option>
-              <option value="construccion">Construcción</option>
-              <option value="otros">Otro</option>
-            </select>
-            <button onclick="searchJobs()" class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold">
-              Buscar
-            </button>
+          <!-- Búsqueda -->
+          <div class="search-box bg-white rounded-xl p-4 mb-6">
+            <div class="flex flex-col md:flex-row gap-3">
+              <input type="text" id="searchCity" value="" placeholder="¿Dónde?"
+                class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+                autocomplete="off" list="statesList">
+              <datalist id="statesList">
+                <option value="Ciudad de México">
+                <option value="Jalisco">
+                <option value="Nuevo León">
+                <option value="Guanajuato">
+                <option value="Puebla">
+                <option value="Veracruz">
+                <option value="México">
+                <option value="Michoacán">
+                <option value="Chihuahua">
+                <option value="Oaxaca">
+                <option value="Guerrero">
+                <option value="Tamaulipas">
+                <option value="Sinaloa">
+                <option value="Coahuila">
+                <option value="Baja California">
+                <option value="Sonora">
+                <option value="Yucatán">
+                <option value="Qintana Roo">
+                <option value="Tlaxcala">
+                <option value="Morelos">
+                <option value="Nayarit">
+                <option value="Aguascalientes">
+                <option value="Zacatecas">
+                <option value="San Luis Potosí">
+                <option value="Querétaro">
+                <option value="Campeche">
+                <option value="Tabasco">
+                <option value="Durango">
+                <option value="Colima">
+                <option value="Baja California Sur">
+              </datalist>
+
+              <select id="searchCategory"
+                class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
+                <option value="">¿Qué necesitas?</option>
+                <option value="plomeria">Plomería</option>
+                <option value="electricidad">Electricidad</option>
+                <option value="carpinteria">Carpintería</option>
+                <option value="pintura">Pintura</option>
+                <option value="limpieza">Limpieza</option>
+                <option value="jardineria">Jardinería</option>
+                <option value="construccion">Construcción</option>
+                <option value="otros">Otro</option>
+              </select>
+              <button onclick="searchJobs()"
+                class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold">
+                Buscar
+              </button>
+            </div>
+          </div>
+
+          <div class="flex gap-6 text-sm text-gray-600">
+            <span>✓ Más de 300 trabajadores</span>
+            <span>✓ Calificaciones reales</span>
+            <span>✓ Precios justos</span>
           </div>
         </div>
-
-        <div class="flex gap-6 text-sm text-gray-600">
-          <span>✓ Más de 300 trabajadores</span>
-          <span>✓ Calificaciones reales</span>
-          <span>✓ Precios justos</span>
-        </div>
+        <img class="w-80 h-80 rounded-full object-cover"
+          src="https://res.cloudinary.com/dr9van0op/image/upload/v1770167767/log1_con5cz.jpg" alt="ConfiaChamba">
       </div>
-        <img class="w-80 h-80 rounded-full object-cover" src="https://res.cloudinary.com/dr9van0op/image/upload/v1770167767/log1_con5cz.jpg" alt="ConfiaChamba">
-    </div>
 
   </section>
 
   <!-- Trabajos -->
   <section class="max-w-6xl mx-auto px-4 py-12">
     <h2 class="text-2xl font-bold text-gray-900 mb-6">Trabajadores disponibles</h2>
-    
+
     <div id="jobsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-    
+
     <div id="loadingJobs" class="text-center py-12 hidden">
       <p class="text-gray-500">Buscando...</p>
     </div>
-    
+
     <div id="noJobs" class="text-center py-12 hidden">
       <p class="text-gray-600 text-lg mb-2">😕 No encontramos nada</p>
       <p class="text-gray-500 text-sm">Prueba con otra búsqueda</p>
@@ -187,7 +204,8 @@
           const jobCard = document.createElement('div');
           jobCard.className = 'job-card bg-white border border-gray-200 rounded-xl p-5 cursor-pointer hover:border-orange-300 hover:shadow-md';
           jobCard.onclick = () => window.location.href = `job-detail.html?id=${job.id}`;
-          
+          console.log(job);
+
           const categoryEmoji = {
             'plomeria': '🔧',
             'electricidad': '⚡',
@@ -198,6 +216,8 @@
             'construccion': '🏗️'
           };
           
+          const user = job.user || {};
+
           jobCard.innerHTML = `
             <div class="flex items-start justify-between mb-3">
               <span class="text-2xl">${categoryEmoji[job.categoria] || '💼'}</span>
@@ -216,23 +236,34 @@
             
             <div class="border-t pt-3 flex items-center gap-2">
               <div class="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                ${job.user.nombre.charAt(0).toUpperCase()}
+                ${user.nombre?.charAt(0)?.toUpperCase() || '?'}
               </div>
               <div class="flex-1 min-w-0">
-                <p class="font-medium text-gray-900 text-sm truncate">${job.user.nombre}</p>
+                <p class="font-medium text-gray-900 text-sm truncate">
+                  ${user.nombre || 'Usuario'}
+                </p>
                 <p class="text-xs text-gray-500">
-                  ⭐ ${parseFloat(job.user.promedio_calificacion || 0).toFixed(1)} • ${job.user.total_trabajos || 0} trabajos
+                  ⭐ ${parseFloat(user.promedio_calificacion || 0).toFixed(1)} • ${user.total_trabajos || 0} trabajos
                 </p>
               </div>
             </div>
           `;
+          
           jobsList.appendChild(jobCard);
         });
       } catch (error) {
         console.error('Error:', error);
         loadingJobs.classList.add('hidden');
-        jobsList.innerHTML = '<div class="col-span-full text-center py-8"><p class="text-red-500">Algo salió mal. Intenta de nuevo.</p></div>';
+
+        jobsList.innerHTML = `
+        <div class="col-span-full text-center py-8">
+          <p class="text-red-500">Error real:</p>
+          <pre>${error}</pre>
+        </div>
+      `;
       }
+
+
     }
 
     function searchJobs() {
@@ -241,10 +272,11 @@
       loadJobs(ciudad, categoria);
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       updateNav();
       loadJobs();
     });
   </script>
 </body>
+
 </html>

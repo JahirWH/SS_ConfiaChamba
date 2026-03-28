@@ -28,15 +28,15 @@ const pool = new Pool({
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
     ? [
-        'https://www.confiachamba.online',
-        'https://confiachamba.online',
-        'https://confiachamba.online'
-      ]
+      'https://www.confiachamba.online',
+      'https://confiachamba.online',
+      'https://confiachamba.online'
+    ]
     : [
-        'http://localhost:4000',
-        'http://localhost:5173',
-        'http://127.0.0.1:4000'
-      ],
+      'http://localhost:4000',
+      'http://localhost:5173',
+      'http://127.0.0.1:4000'
+    ],
   credentials: true
 };
 
@@ -66,12 +66,12 @@ app.locals.db = pool;
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const jobRoutes = require('./routes/jobs');
-const messagesRoutes = require('./routes/messages');
+// const messagesRoutes = require('./routes/messages');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/jobs', jobRoutes);
-app.use('/api/messages', messagesRoutes);
+// app.use('/api/messages', messagesRoutes);
 
 /* =========================
    HEALTH CHECK

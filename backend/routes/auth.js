@@ -61,12 +61,10 @@ router.post('/register', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error en registro:', error);
-    res.status(500).json({
-      error: 'Error interno del servidor'
-    });
+    console.error("🔥 ERROR REAL:", error);
+    res.status(500).json({ error: error.message });
   }
-  
+
 });
 
 
