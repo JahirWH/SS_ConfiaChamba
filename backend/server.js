@@ -12,14 +12,22 @@ const PORT = process.env.PORT || 4000;
    CONEXIÓN A POSTGRESQL
 ========================= */
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD
-});
+const isRemoteDb = process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost') && !process.env.DATABASE_URL.includes('127.0.0.1');
+
+const pool = new Pool(
+  process.env.DATABASE_URL
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ...(isRemoteDb ? { ssl: { rejectUnauthorized: false } } : {})
+      }
+    : {
+        host: process.env.DB_HOST,
+        port: parseInt(process.env.DB_PORT) || 5432,
+        database: process.env.DB_NAME,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD
+      }
+);
 
 /* =========================
    CORS
@@ -29,12 +37,12 @@ const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
     ? [
       'https://www.confiachamba.online',
-      'https://confiachamba.online',
       'https://confiachamba.online'
     ]
     : [
       'http://localhost:4000',
       'http://localhost:5173',
+      'http://127.0.0.1:5173',
       'http://127.0.0.1:4000'
     ],
   credentials: true

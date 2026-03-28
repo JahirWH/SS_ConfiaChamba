@@ -103,3 +103,4 @@ check-supabase.js
 info
 mejoras-futuras.md
 check-deployment.sh
+/generated/prisma

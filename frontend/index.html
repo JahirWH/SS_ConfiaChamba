@@ -191,11 +191,16 @@
         if (categoria) url += `categoria=${encodeURIComponent(categoria)}`;
 
         const response = await fetch(url);
-        const jobs = await response.json();
+        const data = await response.json();
+
+        console.log("RESPUESTA API:", data);
+
+        // 🔥 FIX CLAVE
+        const jobs = Array.isArray(data) ? data : data.jobs || [];
 
         loadingJobs.classList.add('hidden');
 
-        if (jobs.length === 0) {
+        if (!Array.isArray(jobs) || jobs.length === 0) {
           noJobs.classList.remove('hidden');
           return;
         }
@@ -204,7 +209,6 @@
           const jobCard = document.createElement('div');
           jobCard.className = 'job-card bg-white border border-gray-200 rounded-xl p-5 cursor-pointer hover:border-orange-300 hover:shadow-md';
           jobCard.onclick = () => window.location.href = `job-detail.html?id=${job.id}`;
-          console.log(job);
 
           const categoryEmoji = {
             'plomeria': '🔧',
@@ -215,55 +219,54 @@
             'jardineria': '🌱',
             'construccion': '🏗️'
           };
-          
+
           const user = job.user || {};
 
           jobCard.innerHTML = `
-            <div class="flex items-start justify-between mb-3">
-              <span class="text-2xl">${categoryEmoji[job.categoria] || '💼'}</span>
-              <span class="text-xs bg-gray-100 px-2 py-1 rounded">${job.categoria}</span>
-            </div>
-            
-            <h3 class="font-bold text-gray-900 mb-2">${job.titulo}</h3>
-            <p class="text-gray-600 text-sm mb-3 line-clamp-2">${job.descripcion}</p>
-            
-            <div class="mb-3">
-              <span class="text-2xl font-bold text-gray-900">$${job.precio}</span>
-              <span class="text-gray-500 text-sm">/${job.tipo_precio === 'por_hora' ? 'hora' : 'trabajo'}</span>
-            </div>
-            
-            ${job.ciudad ? `<p class="text-sm text-gray-500 mb-4">📍 ${job.ciudad}</p>` : ''}
-            
-            <div class="border-t pt-3 flex items-center gap-2">
-              <div class="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                ${user.nombre?.charAt(0)?.toUpperCase() || '?'}
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="font-medium text-gray-900 text-sm truncate">
-                  ${user.nombre || 'Usuario'}
-                </p>
-                <p class="text-xs text-gray-500">
-                  ⭐ ${parseFloat(user.promedio_calificacion || 0).toFixed(1)} • ${user.total_trabajos || 0} trabajos
-                </p>
-              </div>
-            </div>
-          `;
+          <div class="flex items-start justify-between mb-3">
+            <span class="text-2xl">${categoryEmoji[job.categoria] || '💼'}</span>
+            <span class="text-xs bg-gray-100 px-2 py-1 rounded">${job.categoria}</span>
+          </div>
           
+          <h3 class="font-bold text-gray-900 mb-2">${job.titulo}</h3>
+          <p class="text-gray-600 text-sm mb-3 line-clamp-2">${job.descripcion}</p>
+          
+          <div class="mb-3">
+            <span class="text-2xl font-bold text-gray-900">$${job.precio}</span>
+            <span class="text-gray-500 text-sm">/${job.tipo_precio === 'por_hora' ? 'hora' : 'trabajo'}</span>
+          </div>
+          
+          ${job.ciudad ? `<p class="text-sm text-gray-500 mb-4">📍 ${job.ciudad}</p>` : ''}
+          
+          <div class="border-t pt-3 flex items-center gap-2">
+            <div class="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+              ${user.nombre?.charAt(0)?.toUpperCase() || '?'}
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-medium text-gray-900 text-sm truncate">
+                ${user.nombre || 'Usuario'}
+              </p>
+              <p class="text-xs text-gray-500">
+                ⭐ ${parseFloat(user.promedio_calificacion || 0).toFixed(1)} • ${user.total_trabajos || 0} trabajos
+              </p>
+            </div>
+          </div>
+        `;
+
           jobsList.appendChild(jobCard);
         });
+
       } catch (error) {
         console.error('Error:', error);
         loadingJobs.classList.add('hidden');
 
         jobsList.innerHTML = `
-        <div class="col-span-full text-center py-8">
-          <p class="text-red-500">Error real:</p>
-          <pre>${error}</pre>
-        </div>
-      `;
+      <div class="col-span-full text-center py-8">
+        <p class="text-red-500">Error real:</p>
+        <pre>${error}</pre>
+      </div>
+    `;
       }
-
-
     }
 
     function searchJobs() {
