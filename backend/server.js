@@ -3,8 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { Pool } = require('pg');
 
+const pool = require('./db'); // <- importa db.js
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -14,20 +14,23 @@ const PORT = process.env.PORT || 4000;
 
 const isRemoteDb = process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost') && !process.env.DATABASE_URL.includes('127.0.0.1');
 
-const pool = new Pool(
-  process.env.DATABASE_URL
-    ? {
-        connectionString: process.env.DATABASE_URL,
-        ...(isRemoteDb ? { ssl: { rejectUnauthorized: false } } : {})
-      }
-    : {
-        host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT) || 5432,
-        database: process.env.DB_NAME,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD
-      }
-);
+
+app.locals.db = pool;         // <- lo deja disponible en todas las rutas
+  
+// const pool = new Pool(
+//   process.env.DATABASE_URL
+//     ? {
+//       connectionString: process.env.DATABASE_URL,
+//       ...(isRemoteDb ? { ssl: { rejectUnauthorized: false } } : {})
+//     }
+//     : {
+//       host: process.env.DB_HOST,
+//       port: parseInt(process.env.DB_PORT) || 5432,
+//       database: process.env.DB_NAME,
+//       user: process.env.DB_USER,
+//       password: process.env.DB_PASSWORD
+//     }
+// );
 
 /* =========================
    CORS
