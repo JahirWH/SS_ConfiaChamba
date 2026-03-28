@@ -16,7 +16,11 @@ const isRemoteDb = process.env.DATABASE_URL && !process.env.DATABASE_URL.include
 
 
 app.locals.db = pool;         // <- lo deja disponible en todas las rutas
-  
+
+pool.query('SELECT current_database(), current_user;')
+  .then(res => console.log('🔥 Conectado a DB:', res.rows[0]))
+  .catch(err => console.error('❌ Error DB:', err));
+
 // const pool = new Pool(
 //   process.env.DATABASE_URL
 //     ? {
