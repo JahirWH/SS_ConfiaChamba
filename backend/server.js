@@ -123,4 +123,22 @@ app.get('*', (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => console.log(`Servidor corriendo en puerto ${PORT}`));
 
+// para el SEO
+app.get('/sitemap.xml', async (req, res) => {
+  const jobs = await db.query('SELECT id FROM jobs');
+
+  let urls = jobs.rows.map(job => `
+    <url>
+      <loc>https://confiachamba.online/trabajo/${job.id}</loc>
+    </url>
+  `).join('');
+
+  res.header('Content-Type', 'application/xml');
+  res.send(`
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      ${urls}
+    </urlset>
+  `);
+});
+
 module.exports = app;

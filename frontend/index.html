@@ -1,235 +1,584 @@
 <!DOCTYPE html>
 <html lang="es">
 
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- SEO básico -->
-  <title>ConfiaChamba | Encuentra trabajadores cerca de ti en México</title>
+  <!-- SEO primario -->
+  <title>ConfiaChamba | Plomeros, Electricistas y más cerca de ti en México</title>
   <meta name="description"
-    content="Encuentra plomeros, electricistas, carpinteros y más trabajadores cerca de ti en México. Rápido, seguro y con calificaciones reales.">
+    content="Contrata plomeros, electricistas, carpinteros y pintores en México. Trabajadores verificados con reseñas reales. Disponibles en CDMX, Guadalajara, Monterrey, Puebla y más.">
   <meta name="keywords"
-    content="trabajos México, plomeros cerca, electricistas, servicios locales, contratar trabajadores">
+    content="plomeros cerca de mi, electricistas México, contratar trabajadores, servicios a domicilio México, ConfiaChamba">
   <meta name="author" content="ConfiaChamba">
-
-  <!-- Robots -->
   <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://confiachamba.online">
 
-  <!-- Open Graph (para redes sociales) -->
-  <meta property="og:title" content="ConfiaChamba - Trabajadores cerca de ti">
-  <meta property="og:description" content="Encuentra servicios confiables cerca de ti en México.">
+  <!-- Open Graph -->
+  <meta property="og:title" content="ConfiaChamba – Trabajadores de confianza cerca de ti">
+  <meta property="og:description"
+    content="Plomeros, electricistas, pintores y más en todo México. Calificaciones reales, precios justos.">
   <meta property="og:image" content="https://res.cloudinary.com/dr9van0op/image/upload/v1770167767/log1_con5cz.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://confiachamba.online">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:site_name" content="ConfiaChamba">
 
-  <!-- Twitter -->
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Canonical -->
-  <link rel="canonical" href="https://confiachamba.online">
+  <meta name="twitter:title" content="ConfiaChamba – Trabajadores cerca de ti">
+  <meta name="twitter:description" content="Contrata plomeros, electricistas y más en México.">
+  <meta name="twitter:image" content="https://res.cloudinary.com/dr9van0op/image/upload/v1770167767/log1_con5cz.jpg">
 
   <!-- Favicon -->
   <link rel="icon" href="/favicon.ico">
 
-  <!-- Preconnect (performance SEO) -->
+  <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+  <!-- Fonts: Sora display + DM Sans body -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap"
     rel="stylesheet">
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Config -->
-  <script src="config.js" defer></script>
-
-  <!-- JSON-LD (SEO PRO) -->
+  <!-- JSON-LD: WebSite + LocalBusiness -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "ConfiaChamba",
     "url": "https://confiachamba.online",
+    "description": "Plataforma para encontrar trabajadores de confianza en México",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://confiachamba.online/?ciudad={search_term}",
-      "query-input": "required name=search_term"
+      "target": "https://confiachamba.online/?ciudad={search_term_string}",
+      "query-input": "required name=search_term_string"
     }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "ConfiaChamba",
+    "serviceType": "Directorio de Trabajadores",
+    "areaServed": {
+      "@type": "Country",
+      "name": "México"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "ConfiaChamba",
+      "url": "https://confiachamba.online"
+    },
+    "description": "Encuentra plomeros, electricistas, carpinteros y pintores verificados en México con calificaciones reales."
   }
   </script>
 
   <style>
-    * {
-      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    :root {
+      --naranja: #F4500A;
+      --naranja-claro: #FF6B2B;
+      --naranja-bg: #FFF4EF;
+      --gris-900: #111827;
+      --gris-600: #4B5563;
+      --gris-200: #E5E7EB;
     }
 
+    * {
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    .display {
+      font-family: 'Sora', system-ui, sans-serif;
+    }
+
+    body {
+      background: #fff;
+      color: var(--gris-900);
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #F3F4F6;
+    }
+
+    /* Hero */
+    .hero-bg {
+      background: linear-gradient(135deg, #FFF4EF 0%, #FFF9F6 60%, #FFF 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(244, 80, 10, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Cards */
     .job-card {
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      border: 1.5px solid #F3F4F6;
     }
 
     .job-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 32px rgba(244, 80, 10, 0.10);
+      border-color: #FDBA8C;
     }
 
+    /* Search box */
     .search-box {
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.09);
+    }
+
+    /* Pills categorías */
+    .cat-pill {
+      transition: all 0.15s;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .cat-pill:hover,
+    .cat-pill.active {
+      background: var(--naranja);
+      color: #fff;
+      border-color: var(--naranja);
+    }
+
+    /* Botón principal */
+    .btn-main {
+      background: var(--naranja);
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-main:hover {
+      background: var(--naranja-claro);
+    }
+
+    .btn-main:active {
+      transform: scale(0.97);
+    }
+
+    /* Avatar inicial */
+    .avatar-letter {
+      background: linear-gradient(135deg, #F4500A, #FF8C42);
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+    }
+
+    /* Skeleton loader */
+    @keyframes shimmer {
+      0% {
+        background-position: -400px 0;
+      }
+
+      100% {
+        background-position: 400px 0;
+      }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 400px 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+
+    /* Fade-in al cargar */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.5s ease both;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--naranja) !important;
+      box-shadow: 0 0 0 3px rgba(244, 80, 10, 0.12);
     }
   </style>
 </head>
 
+<body>
 
-<body class="bg-white">
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar sticky top-0 z-50" role="navigation" aria-label="Navegación principal">
+    <div class="max-w-6xl mx-auto px-5 py-4 flex justify-between items-center">
 
-  <!-- Navbar simple -->
-  <nav class="border-b bg-white sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="index.html" class="flex items-center gap-2">
-        <span class="text-2xl"><img src=""></span>
-        <span class="text-xl font-bold text-gray-900">ConfiaChamba</span>
+      <a href="/" class="flex items-center gap-2" aria-label="ConfiaChamba – Inicio">
+        <!-- Logo SVG inline (no depende de imagen externa) -->
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--naranja)">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M3 14 L9 4 L15 14" stroke="white" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <path d="M5.5 10.5 H12.5" stroke="white" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </div>
+        <span class="text-lg font-bold" style="font-family:'Sora',sans-serif; color:var(--gris-900)">
+          ConfiaChamba
+        </span>
       </a>
-      <div id="navLinks"></div>
+
+      <div class="flex items-center gap-3" id="navLinks">
+        <!-- Se inyecta con JS si hay sesión activa -->
+        <a href="/registro-trabajador.html"
+          class="text-sm font-medium px-4 py-2 rounded-lg border border-gray-200 hover:border-orange-400 hover:text-orange-600 transition-colors"
+          style="color:var(--gris-600)">
+          Ofrece tu servicio
+        </a>
+        <a href="/login.html" class="btn-main text-white text-sm font-semibold px-5 py-2 rounded-lg">
+          Entrar
+        </a>
+      </div>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="bg-orange-50 py-16">
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="flex items-center gap-8">
+  <!-- ═══ HERO ═══ -->
+  <section class="hero-bg py-16 md:py-20" aria-labelledby="hero-heading">
+    <div class="max-w-6xl mx-auto px-5">
+      <div class="flex flex-col md:flex-row items-center gap-10">
 
-        <div class="max-w-3xl">
-          <h1 class="text-5xl font-bold text-gray-900 mb-4 leading-tight">
-            Encuentra trabajadores <br>
-            <span class="text-orange-600">cerca de ti</span>
+        <!-- Texto -->
+        <div class="flex-1 fade-up">
+          <div
+            class="inline-flex items-center gap-2 bg-white border border-orange-100 px-3 py-1 rounded-full text-xs font-semibold mb-5"
+            style="color:var(--naranja)">
+            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse inline-block"></span>
+            +300 trabajadores activos en México
+          </div>
+
+          <h1 id="hero-heading" class="text-4xl md:text-5xl font-extrabold leading-tight mb-4"
+            style="color:var(--gris-900)">
+            Encuentra trabajadores<br>
+            <span style="color:var(--naranja)">cerca de ti</span>
           </h1>
-          <p class="text-xl text-gray-700 mb-8">
-            Plomeros, electricistas, pintores... gente de confianza que hace bien la chamba
+
+          <p class="text-lg mb-8" style="color:var(--gris-600); max-width:480px">
+            Plomeros, electricistas, pintores y más —&nbsp;gente de confianza que hace bien la chamba, sin
+            complicaciones.
           </p>
 
           <!-- Búsqueda -->
-          <div class="search-box bg-white rounded-xl p-4 mb-6">
+          <div class="search-box bg-white rounded-2xl p-4 mb-6">
             <div class="flex flex-col md:flex-row gap-3">
-              <input type="text" id="searchCity" value="" placeholder="¿Dónde?"
-                class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
-                autocomplete="off" list="statesList">
-              <datalist id="statesList">
-                <option value="Ciudad de México">
-                <option value="Jalisco">
-                <option value="Nuevo León">
-                <option value="Guanajuato">
-                <option value="Puebla">
-                <option value="Veracruz">
-                <option value="México">
-                <option value="Michoacán">
-                <option value="Chihuahua">
-                <option value="Oaxaca">
-                <option value="Guerrero">
-                <option value="Tamaulipas">
-                <option value="Sinaloa">
-                <option value="Coahuila">
-                <option value="Baja California">
-                <option value="Sonora">
-                <option value="Yucatán">
-                <option value="Qintana Roo">
-                <option value="Tlaxcala">
-                <option value="Morelos">
-                <option value="Nayarit">
-                <option value="Aguascalientes">
-                <option value="Zacatecas">
-                <option value="San Luis Potosí">
-                <option value="Querétaro">
-                <option value="Campeche">
-                <option value="Tabasco">
-                <option value="Durango">
-                <option value="Colima">
-                <option value="Baja California Sur">
-              </datalist>
+              <div class="flex-1 relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                  aria-hidden="true">📍</span>
+                <input type="text" id="searchCity" placeholder="¿En qué estado?"
+                  aria-label="Estado o ciudad donde buscar"
+                  class="w-full pl-9 pr-4 py-3 border border-gray-200 rounded-xl text-sm" autocomplete="off"
+                  list="statesList">
+                <datalist id="statesList">
+                  <option value="Ciudad de México">
+                  <option value="Jalisco">
+                  <option value="Nuevo León">
+                  <option value="Guanajuato">
+                  <option value="Puebla">
+                  <option value="Veracruz">
+                  <option value="Estado de México">
+                  <option value="Michoacán">
+                  <option value="Chihuahua">
+                  <option value="Oaxaca">
+                  <option value="Guerrero">
+                  <option value="Tamaulipas">
+                  <option value="Sinaloa">
+                  <option value="Coahuila">
+                  <option value="Baja California">
+                  <option value="Sonora">
+                  <option value="Yucatán">
+                  <option value="Quintana Roo">
+                  <option value="Tlaxcala">
+                  <option value="Morelos">
+                  <option value="Nayarit">
+                  <option value="Aguascalientes">
+                  <option value="Zacatecas">
+                  <option value="San Luis Potosí">
+                  <option value="Querétaro">
+                  <option value="Campeche">
+                  <option value="Tabasco">
+                  <option value="Durango">
+                  <option value="Colima">
+                  <option value="Baja California Sur">
+                  <option value="Chiapas">
+                  <option value="Hidalgo">
+                </datalist>
+              </div>
 
-              <select id="searchCategory"
-                class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
+              <select id="searchCategory" aria-label="Categoría de servicio"
+                class="px-4 py-3 border border-gray-200 rounded-xl text-sm bg-white">
                 <option value="">¿Qué necesitas?</option>
-                <option value="plomeria">Plomería</option>
-                <option value="electricidad">Electricidad</option>
-                <option value="carpinteria">Carpintería</option>
-                <option value="pintura">Pintura</option>
-                <option value="limpieza">Limpieza</option>
-                <option value="jardineria">Jardinería</option>
-                <option value="construccion">Construcción</option>
-                <option value="otros">Otro</option>
+                <option value="plomeria">🔧 Plomería</option>
+                <option value="electricidad">⚡ Electricidad</option>
+                <option value="carpinteria">🪚 Carpintería</option>
+                <option value="pintura">🎨 Pintura</option>
+                <option value="limpieza">🧹 Limpieza</option>
+                <option value="jardineria">🌱 Jardinería</option>
+                <option value="construccion">🏗️ Construcción</option>
+                <option value="cerrajeria">🔑 Cerrajería</option>
+                <option value="otros">💼 Otro</option>
               </select>
+
               <button onclick="searchJobs()"
-                class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold">
-                Buscar
+                class="btn-main text-white px-7 py-3 rounded-xl font-semibold text-sm whitespace-nowrap"
+                aria-label="Buscar trabajadores">
+                Buscar →
               </button>
             </div>
           </div>
 
-          <div class="flex gap-6 text-sm text-gray-600">
-            <span>✓ Más de 300 trabajadores</span>
-            <span>✓ Calificaciones reales</span>
-            <span>✓ Precios justos</span>
+          <!-- Badges de confianza -->
+          <div class="flex flex-wrap gap-4 text-sm" style="color:var(--gris-600)">
+            <span class="flex items-center gap-1.5"><span class="text-green-500">✓</span> Sin registro para
+              buscar</span>
+            <span class="flex items-center gap-1.5"><span class="text-green-500">✓</span> Calificaciones reales</span>
+            <span class="flex items-center gap-1.5"><span class="text-green-500">✓</span> Gratis para contratar</span>
           </div>
         </div>
-        <img class="w-80 h-80 rounded-full object-cover"
-          src="https://res.cloudinary.com/dr9van0op/image/upload/v1770167767/log1_con5cz.jpg" alt="ConfiaChamba">
-      </div>
 
-  </section>
-
-  <!-- Trabajos -->
-  <section class="max-w-6xl mx-auto px-4 py-12">
-    <h2 class="text-2xl font-bold text-gray-900 mb-6">Trabajadores disponibles</h2>
-
-    <div id="jobsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-
-    <div id="loadingJobs" class="text-center py-12 hidden">
-      <p class="text-gray-500">Buscando...</p>
-    </div>
-
-    <div id="noJobs" class="text-center py-12 hidden">
-      <p class="text-gray-600 text-lg mb-2">😕 No encontramos nada</p>
-      <p class="text-gray-500 text-sm">Prueba con otra búsqueda</p>
-    </div>
-  </section>
-
-  <!-- Info rápida -->
-  <section class="bg-gray-50 py-12 mt-8">
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="grid md:grid-cols-3 gap-8 text-center">
-        <div>
-          <div class="text-4xl mb-2">🔒</div>
-          <h3 class="font-bold text-gray-900 mb-1">Perfiles verificados</h3>
-          <p class="text-gray-600 text-sm">Todos los trabajadores tienen reseñas de clientes reales</p>
-        </div>
-        <div>
-          <div class="text-4xl mb-2">⚡</div>
-          <h3 class="font-bold text-gray-900 mb-1">Respuesta rápida</h3>
-          <p class="text-gray-600 text-sm">La mayoría responde en menos de 1 hora</p>
-        </div>
-        <div>
-          <div class="text-4xl mb-2">💰</div>
-          <h3 class="font-bold text-gray-900 mb-1">Buenos precios</h3>
-          <p class="text-gray-600 text-sm">Compara y elige el que más te convenga</p>
+        <!-- Imagen hero -->
+        <div class="hidden md:block flex-shrink-0">
+          <img src="https://res.cloudinary.com/dr9van0op/image/upload/v1770167767/log1_con5cz.jpg"
+            alt="Trabajador profesional en México usando ConfiaChamba" class="w-72 h-72 rounded-2xl object-cover"
+            style="box-shadow: 0 20px 60px rgba(244,80,10,0.18)" width="288" height="288" loading="eager">
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="border-t py-8 mt-12">
-    <div class="max-w-6xl mx-auto px-4 text-center text-gray-600 text-sm">
-      ConfiaChamba 2024 • Hecho con ☕ en México
+  <!-- ═══ FILTROS RÁPIDOS POR CATEGORÍA ═══ -->
+  <section class="border-b" aria-label="Filtros por categoría">
+    <div class="max-w-6xl mx-auto px-5 py-4">
+      <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide" id="categoryPills">
+        <!-- Se generan con JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TRABAJADORES DISPONIBLES ═══ -->
+  <main class="max-w-6xl mx-auto px-5 py-12">
+
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold" style="font-family:'Sora',sans-serif">
+        Trabajadores disponibles
+      </h2>
+      <span id="resultCount" class="text-sm" style="color:var(--gris-600)"></span>
+    </div>
+
+    <!-- Skeleton loaders -->
+    <div id="loadingJobs" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 hidden" aria-live="polite"
+      aria-label="Cargando resultados">
+      <div class="rounded-2xl p-5 border border-gray-100" style="height:220px">
+        <div class="skeleton h-4 w-1/3 mb-4"></div>
+        <div class="skeleton h-5 w-3/4 mb-2"></div>
+        <div class="skeleton h-4 w-full mb-1"></div>
+        <div class="skeleton h-4 w-2/3 mb-5"></div>
+        <div class="skeleton h-6 w-1/4"></div>
+      </div>
+      <div class="rounded-2xl p-5 border border-gray-100" style="height:220px">
+        <div class="skeleton h-4 w-1/3 mb-4"></div>
+        <div class="skeleton h-5 w-3/4 mb-2"></div>
+        <div class="skeleton h-4 w-full mb-1"></div>
+        <div class="skeleton h-4 w-2/3 mb-5"></div>
+        <div class="skeleton h-6 w-1/4"></div>
+      </div>
+      <div class="rounded-2xl p-5 border border-gray-100 hidden md:block" style="height:220px">
+        <div class="skeleton h-4 w-1/3 mb-4"></div>
+        <div class="skeleton h-5 w-3/4 mb-2"></div>
+        <div class="skeleton h-4 w-full mb-1"></div>
+        <div class="skeleton h-4 w-2/3 mb-5"></div>
+        <div class="skeleton h-6 w-1/4"></div>
+      </div>
+    </div>
+
+    <!-- Lista de trabajos -->
+    <div id="jobsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" role="list"
+      aria-label="Lista de trabajadores"></div>
+
+    <!-- Sin resultados -->
+    <div id="noJobs" class="hidden text-center py-16" role="status">
+      <div class="text-5xl mb-4">😕</div>
+      <p class="text-xl font-semibold mb-2" style="color:var(--gris-900)">No encontramos nada</p>
+      <p class="text-sm" style="color:var(--gris-600)">Prueba con otra ciudad o categoría</p>
+      <button onclick="resetSearch()" class="mt-5 text-sm font-semibold underline" style="color:var(--naranja)">
+        Ver todos los trabajadores
+      </button>
+    </div>
+  </main>
+
+  <!-- ═══ SEO: LINKS INTERNOS ═══ -->
+  <section class="bg-orange-50 py-10">
+    <div class="max-w-6xl mx-auto px-5">
+      <h2 class="text-xl font-bold mb-2" style="font-family:'Sora',sans-serif">
+        Encuentra servicios en las principales ciudades
+      </h2>
+      <p class="text-sm mb-5" style="color:var(--gris-600)">
+        Trabajadores verificados en todo México, listos para ayudarte hoy mismo.
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-y-2 gap-x-4 text-sm">
+        <a href="/?ciudad=Puebla&categoria=plomeria"
+          class="text-orange-600 hover:underline hover:text-orange-700">Plomeros en Puebla</a>
+        <a href="/?ciudad=Ciudad de México&categoria=electricidad"
+          class="text-orange-600 hover:underline hover:text-orange-700">Electricistas en CDMX</a>
+        <a href="/?ciudad=Jalisco&categoria=carpinteria"
+          class="text-orange-600 hover:underline hover:text-orange-700">Carpinteros en Guadalajara</a>
+        <a href="/?ciudad=Nuevo León&categoria=pintura"
+          class="text-orange-600 hover:underline hover:text-orange-700">Pintores en Monterrey</a>
+        <a href="/?ciudad=Jalisco&categoria=plomeria"
+          class="text-orange-600 hover:underline hover:text-orange-700">Plomeros en Guadalajara</a>
+        <a href="/?ciudad=Querétaro&categoria=electricidad"
+          class="text-orange-600 hover:underline hover:text-orange-700">Electricistas en Querétaro</a>
+        <a href="/?ciudad=Nuevo León&categoria=limpieza"
+          class="text-orange-600 hover:underline hover:text-orange-700">Limpieza en Monterrey</a>
+        <a href="/?ciudad=Ciudad de México&categoria=jardineria"
+          class="text-orange-600 hover:underline hover:text-orange-700">Jardineros en CDMX</a>
+        <a href="/?ciudad=Puebla&categoria=construccion"
+          class="text-orange-600 hover:underline hover:text-orange-700">Construcción en Puebla</a>
+        <a href="/?ciudad=Yucatán&categoria=plomeria"
+          class="text-orange-600 hover:underline hover:text-orange-700">Plomeros en Mérida</a>
+        <a href="/?ciudad=Jalisco&categoria=pintura"
+          class="text-orange-600 hover:underline hover:text-orange-700">Pintores en Guadalajara</a>
+        <a href="/?ciudad=Nuevo León&categoria=carpinteria"
+          class="text-orange-600 hover:underline hover:text-orange-700">Carpinteros en Monterrey</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONFIANZA ═══ -->
+  <section class="py-14 bg-white" aria-label="Por qué elegir ConfiaChamba">
+    <div class="max-w-6xl mx-auto px-5">
+      <h2 class="text-2xl font-bold text-center mb-10" style="font-family:'Sora',sans-serif">
+        ¿Por qué elegir ConfiaChamba?
+      </h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="rounded-2xl p-6 border border-gray-100 hover:border-orange-200 transition-colors">
+          <div class="text-3xl mb-3">🔒</div>
+          <h3 class="font-semibold text-lg mb-1">Perfiles con reseñas reales</h3>
+          <p class="text-sm" style="color:var(--gris-600)">Cada trabajador tiene calificaciones de clientes anteriores.
+            Tú decides con información real, no con promesas.</p>
+        </div>
+        <div class="rounded-2xl p-6 border border-gray-100 hover:border-orange-200 transition-colors">
+          <div class="text-3xl mb-3">⚡</div>
+          <h3 class="font-semibold text-lg mb-1">Respuesta en menos de 1 hora</h3>
+          <p class="text-sm" style="color:var(--gris-600)">La mayoría de los trabajadores responde rápido. Sin esperar
+            días para que alguien te atienda.</p>
+        </div>
+        <div class="rounded-2xl p-6 border border-gray-100 hover:border-orange-200 transition-colors">
+          <div class="text-3xl mb-3">💰</div>
+          <h3 class="font-semibold text-lg mb-1">Precios transparentes</h3>
+          <p class="text-sm" style="color:var(--gris-600)">Cada trabajador publica su tarifa desde el inicio. Compara y
+            elige sin sorpresas al final.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA REGISTRARSE COMO TRABAJADOR ═══ -->
+  <section class="py-14" style="background: linear-gradient(135deg, #F4500A 0%, #FF7A35 100%)"
+    aria-label="Registro de trabajadores">
+    <div class="max-w-2xl mx-auto px-5 text-center text-white">
+      <h2 class="text-3xl font-extrabold mb-3" style="font-family:'Sora',sans-serif">¿Eres trabajador?</h2>
+      <p class="text-lg mb-7 opacity-90">Publica tu servicio gratis y recibe clientes cerca de ti. Sin comisiones
+        ocultas.</p>
+      <a href="/registro-trabajador.html" class="inline-block bg-white font-bold px-8 py-3 rounded-xl text-base"
+        style="color:var(--naranja)">
+        Publicar mi servicio gratis →
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="border-t py-10" role="contentinfo">
+    <div class="max-w-6xl mx-auto px-5">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm" style="color:var(--gris-600)">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded flex items-center justify-center" style="background:var(--naranja)">
+            <svg width="12" height="12" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <path d="M3 14 L9 4 L15 14" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M5.5 10.5 H12.5" stroke="white" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <span class="font-semibold" style="color:var(--gris-900); font-family:'Sora',sans-serif">ConfiaChamba</span>
+          <span>© 2026 • Hecho con ☕ en México</span>
+        </div>
+        <nav class="flex gap-5" aria-label="Links del footer">
+          <a href="/terminos.html" class="hover:text-orange-600 transition-colors">Términos</a>
+          <a href="/privacidad.html" class="hover:text-orange-600 transition-colors">Privacidad</a>
+          <a href="/contacto.html" class="hover:text-orange-600 transition-colors">Contacto</a>
+        </nav>
+      </div>
     </div>
   </footer>
 
+  <!-- config.js primero (SIN defer) para que CONFIG esté disponible antes del script principal -->
+  <script src="config.js"></script>
+
   <script>
-    function updateNav() {
-      renderNavLinks();
+    // ─── Categorías (pills visuales, sin tocar el fetch) ──────────
+    const CATEGORIES = [
+      { value: '', label: 'Todos', emoji: '🏠' },
+      { value: 'plomeria', label: 'Plomería', emoji: '🔧' },
+      { value: 'electricidad', label: 'Electricidad', emoji: '⚡' },
+      { value: 'carpinteria', label: 'Carpintería', emoji: '🪚' },
+      { value: 'pintura', label: 'Pintura', emoji: '🎨' },
+      { value: 'limpieza', label: 'Limpieza', emoji: '🧹' },
+      { value: 'jardineria', label: 'Jardinería', emoji: '🌱' },
+      { value: 'construccion', label: 'Construcción', emoji: '🏗️' },
+      { value: 'otros', label: 'Otros', emoji: '💼' },
+    ];
+
+    let activeCat = '';
+
+    function renderCategoryPills() {
+      const container = document.getElementById('categoryPills');
+      container.innerHTML = CATEGORIES.map(c => `
+        <button
+          class="cat-pill flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 text-sm font-medium whitespace-nowrap ${c.value === activeCat ? 'active' : ''}"
+          onclick="filterByCategory('${c.value}')"
+          aria-pressed="${c.value === activeCat}">
+          ${c.emoji} ${c.label}
+        </button>
+      `).join('');
     }
 
+    function filterByCategory(cat) {
+      activeCat = cat;
+      document.getElementById('searchCategory').value = cat;
+      renderCategoryPills();
+      loadJobs(document.getElementById('searchCity').value, cat);
+    }
+
+    // ─── FETCH ORIGINAL del usuario (sin cambios en lógica) ───────
     async function loadJobs(ciudad = '', categoria = '') {
       const jobsList = document.getElementById('jobsList');
       const loadingJobs = document.getElementById('loadingJobs');
@@ -240,6 +589,7 @@
       noJobs.classList.add('hidden');
 
       try {
+        // ⚠️ Exactamente igual que tu código original
         let url = `${CONFIG.API_ENDPOINT}/jobs?`;
         if (ciudad) url += `ciudad=${encodeURIComponent(ciudad)}&`;
         if (categoria) url += `categoria=${encodeURIComponent(categoria)}`;
@@ -249,7 +599,7 @@
 
         console.log("RESPUESTA API:", data);
 
-        // 🔥 FIX CLAVE
+        // Tu fix original
         const jobs = Array.isArray(data) ? data : data.jobs || [];
 
         loadingJobs.classList.add('hidden');
@@ -259,53 +609,54 @@
           return;
         }
 
-        jobs.forEach(job => {
+        // Contador de resultados (solo visual)
+        const countEl = document.getElementById('resultCount');
+        if (countEl) countEl.textContent = `${jobs.length} encontrado${jobs.length !== 1 ? 's' : ''}`;
+
+        jobs.forEach((job, i) => {
           const jobCard = document.createElement('div');
-          jobCard.className = 'job-card bg-white border border-gray-200 rounded-xl p-5 cursor-pointer hover:border-orange-300 hover:shadow-md';
+          jobCard.className = 'job-card bg-white rounded-2xl p-5 cursor-pointer fade-up';
+          jobCard.style.animationDelay = `${i * 60}ms`;
           jobCard.onclick = () => window.location.href = `job-detail.html?id=${job.id}`;
 
           const categoryEmoji = {
-            'plomeria': '🔧',
-            'electricidad': '⚡',
-            'carpinteria': '🪚',
-            'pintura': '🎨',
-            'limpieza': '🧹',
-            'jardineria': '🌱',
+            'plomeria': '🔧', 'electricidad': '⚡', 'carpinteria': '🪚',
+            'pintura': '🎨', 'limpieza': '🧹', 'jardineria': '🌱',
             'construccion': '🏗️'
           };
 
           const user = job.user || {};
 
+          // HTML de card idéntico al original + mejoras visuales mínimas
           jobCard.innerHTML = `
-          <div class="flex items-start justify-between mb-3">
-            <span class="text-2xl">${categoryEmoji[job.categoria] || '💼'}</span>
-            <span class="text-xs bg-gray-100 px-2 py-1 rounded">${job.categoria}</span>
-          </div>
-          
-          <h3 class="font-bold text-gray-900 mb-2">${job.titulo}</h3>
-          <p class="text-gray-600 text-sm mb-3 line-clamp-2">${job.descripcion}</p>
-          
-          <div class="mb-3">
-            <span class="text-2xl font-bold text-gray-900">$${job.precio}</span>
-            <span class="text-gray-500 text-sm">/${job.tipo_precio === 'por_hora' ? 'hora' : 'trabajo'}</span>
-          </div>
-          
-          ${job.ciudad ? `<p class="text-sm text-gray-500 mb-4">📍 ${job.ciudad}</p>` : ''}
-          
-          <div class="border-t pt-3 flex items-center gap-2">
-            <div class="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-              ${user.nombre?.charAt(0)?.toUpperCase() || '?'}
+            <div class="flex items-start justify-between mb-3">
+              <span class="text-2xl">${categoryEmoji[job.categoria] || '💼'}</span>
+              <span class="text-xs px-2 py-1 rounded-full font-medium capitalize"
+                    style="background:#FFF4EF; color:var(--naranja)">${job.categoria}</span>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="font-medium text-gray-900 text-sm truncate">
-                ${user.nombre || 'Usuario'}
-              </p>
-              <p class="text-xs text-gray-500">
-                ⭐ ${parseFloat(user.promedio_calificacion || 0).toFixed(1)} • ${user.total_trabajos || 0} trabajos
-              </p>
+
+            <h3 class="font-bold text-gray-900 mb-2" style="font-family:'Sora',sans-serif">${job.titulo}</h3>
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2">${job.descripcion}</p>
+
+            <div class="mb-3">
+              <span class="text-2xl font-bold text-gray-900" style="font-family:'Sora',sans-serif">$${job.precio}</span>
+              <span class="text-gray-500 text-sm">/${job.tipo_precio === 'por_hora' ? 'hora' : 'trabajo'}</span>
             </div>
-          </div>
-        `;
+
+            ${job.ciudad ? `<p class="text-sm text-gray-500 mb-4">📍 ${job.ciudad}</p>` : ''}
+
+            <div class="border-t pt-3 flex items-center gap-2">
+              <div class="avatar-letter w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                ${user.nombre?.charAt(0)?.toUpperCase() || '?'}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-medium text-gray-900 text-sm truncate">${user.nombre || 'Usuario'}</p>
+                <p class="text-xs text-gray-500">
+                  ⭐ ${parseFloat(user.promedio_calificacion || 0).toFixed(1)} · ${user.total_trabajos || 0} trabajos
+                </p>
+              </div>
+            </div>
+          `;
 
           jobsList.appendChild(jobCard);
         });
@@ -313,27 +664,60 @@
       } catch (error) {
         console.error('Error:', error);
         loadingJobs.classList.add('hidden');
-
         jobsList.innerHTML = `
-      <div class="col-span-full text-center py-8">
-        <p class="text-red-500">Error real:</p>
-        <pre>${error}</pre>
-      </div>
-    `;
+          <div class="col-span-full text-center py-8">
+            <p class="text-red-500">Error al cargar trabajos</p>
+            <pre class="text-xs text-gray-400 mt-1">${error}</pre>
+          </div>`;
       }
     }
 
     function searchJobs() {
       const ciudad = document.getElementById('searchCity').value;
       const categoria = document.getElementById('searchCategory').value;
+      activeCat = categoria;
+      renderCategoryPills();
       loadJobs(ciudad, categoria);
+    }
+
+    function resetSearch() {
+      document.getElementById('searchCity').value = '';
+      document.getElementById('searchCategory').value = '';
+      activeCat = '';
+      renderCategoryPills();
+      loadJobs();
+    }
+
+    // Leer params de URL (para links SEO)
+    function readURLParams() {
+      const params = new URLSearchParams(window.location.search);
+      const ciudad = params.get('ciudad') || '';
+      const cat = params.get('categoria') || '';
+      if (ciudad) document.getElementById('searchCity').value = ciudad;
+      if (cat) document.getElementById('searchCategory').value = cat;
+      activeCat = cat;
+    }
+
+    function updateNav() {
+      // Tu función original — si tienes renderNavLinks en otro archivo, sigue funcionando
+      if (typeof renderNavLinks === 'function') renderNavLinks();
     }
 
     document.addEventListener('DOMContentLoaded', function () {
       updateNav();
-      loadJobs();
+      readURLParams();
+      renderCategoryPills();
+
+      const ciudad = document.getElementById('searchCity').value;
+      const cat = document.getElementById('searchCategory').value;
+      loadJobs(ciudad, cat);
+
+      document.getElementById('searchCity').addEventListener('keydown', e => {
+        if (e.key === 'Enter') searchJobs();
+      });
     });
   </script>
+
 </body>
 
 </html>
