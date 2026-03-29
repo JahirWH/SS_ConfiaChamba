@@ -1,14 +1,67 @@
 <!DOCTYPE html>
 <html lang="es">
 
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ConfiaChamba - Encuentra chambitas cerca de ti</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="config.js"></script>
+
+  <!-- SEO básico -->
+  <title>ConfiaChamba | Encuentra trabajadores cerca de ti en México</title>
+  <meta name="description"
+    content="Encuentra plomeros, electricistas, carpinteros y más trabajadores cerca de ti en México. Rápido, seguro y con calificaciones reales.">
+  <meta name="keywords"
+    content="trabajos México, plomeros cerca, electricistas, servicios locales, contratar trabajadores">
+  <meta name="author" content="ConfiaChamba">
+
+  <!-- Robots -->
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph (para redes sociales) -->
+  <meta property="og:title" content="ConfiaChamba - Trabajadores cerca de ti">
+  <meta property="og:description" content="Encuentra servicios confiables cerca de ti en México.">
+  <meta property="og:image" content="https://res.cloudinary.com/dr9van0op/image/upload/v1770167767/log1_con5cz.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://confiachamba.online">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://confiachamba.online">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico">
+
+  <!-- Preconnect (performance SEO) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Config -->
+  <script src="config.js" defer></script>
+
+  <!-- JSON-LD (SEO PRO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "ConfiaChamba",
+    "url": "https://confiachamba.online",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://confiachamba.online/?ciudad={search_term}",
+      "query-input": "required name=search_term"
+    }
+  }
+  </script>
+
   <style>
     * {
       font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -27,6 +80,7 @@
     }
   </style>
 </head>
+
 
 <body class="bg-white">
 
